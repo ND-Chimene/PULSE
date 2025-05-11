@@ -15,11 +15,11 @@ class History
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'history', orphanRemoval: true)]
-    private Collection $userId;
+    // /**
+    //  * @var Collection<int, User>
+    //  */
+    // #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'history', orphanRemoval: true)]
+    // private Collection $userId;
 
     #[ORM\Column]
     private ?\DateTime $login_date = null;
@@ -36,45 +36,45 @@ class History
     #[ORM\Column(length: 255)]
     private ?string $browser = null;
 
-    public function __construct()
-    {
-        $this->userId = new ArrayCollection();
-    }
+    // public function __construct()
+    // {
+    //     $this->userId = new ArrayCollection();
+    // }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUserId(): Collection
-    {
-        return $this->userId;
-    }
+    // /**
+    //  * @return Collection<int, User>
+    //  */
+    // public function getUserId(): Collection
+    // {
+    //     return $this->userId;
+    // }
 
-    public function addUserId(User $userId): static
-    {
-        if (!$this->userId->contains($userId)) {
-            $this->userId->add($userId);
-            $userId->setHistory($this);
-        }
+    // public function addUserId(User $userId): static
+    // {
+    //     if (!$this->userId->contains($userId)) {
+    //         $this->userId->add($userId);
+    //         $userId->setHistory($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeUserId(User $userId): static
-    {
-        if ($this->userId->removeElement($userId)) {
-            // set the owning side to null (unless already changed)
-            if ($userId->getHistory() === $this) {
-                $userId->setHistory(null);
-            }
-        }
+    // public function removeUserId(User $userId): static
+    // {
+    //     if ($this->userId->removeElement($userId)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($userId->getHistory() === $this) {
+    //             $userId->setHistory(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getLoginDate(): ?\DateTime
     {
