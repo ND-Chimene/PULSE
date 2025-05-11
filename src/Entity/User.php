@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -43,10 +44,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'userId')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?History $history = null;
+    // #[ORM\ManyToOne(inversedBy: 'userId')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?History $history = null;
 
+    #[ORM\PrePersist]
+    public function setCreatedAtValue()
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue()
+    {
+        $this->updated_at = new \DateTimeImmutable();
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -168,15 +181,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getHistory(): ?History
-    {
-        return $this->history;
-    }
+    // public function getHistory(): ?History
+    // {
+    //     return $this->history;
+    // }
 
-    public function setHistory(?History $history): static
-    {
-        $this->history = $history;
+    // public function setHistory(?History $history): static
+    // {
+    //     $this->history = $history;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }
