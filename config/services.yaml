@@ -25,14 +25,12 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-        App\Service\NinjaOneApiService:
-            arguments:
-                $ninjaOneApiUrl: '%NINJAONE_API_URL.api_url%'
-                $ninjaOneGrantType: '%NINJAONE_GRANT_TYPE.grant_type%'
-                $ninjaOneApiClientId: '%NINJAONE_API_CLIENT_ID.client_id%'
-                $ninjaOneApiClientSecret: '%NINJAONE_API_CLIENT_SECRET.client_secret%'
-                $ninjaOneScope: '%NINJAONE_SCOPE.scope%'
-
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Service\NinjaOneApiService:
+        arguments:
+            $httpClient: '@http_client'
+            $requestStack: '@request_stack'
+            $ninjaOneApiUrl: '%NINJAONE_API_URL.api_url%'
+            $ninjaOneGrantType: '%NINJAONE_GRANT_TYPE.grant_type%'
+            $ninjaOneClientId: '%NINJAONE_API_CLIENT_ID.client_id%'
+            $ninjaOneClientSecret: '%NINJAONE_API_CLIENT_SECRET.client_secret%'
+            $ninjaOneScope: '%NINJAONE_SCOPE.scope%'
