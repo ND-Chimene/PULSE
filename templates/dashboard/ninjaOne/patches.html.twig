@@ -1,0 +1,12 @@
+{% block body %}
+
+	{% if patches is defined %}
+		{% for item in patches %}
+			<p>
+				{{item.status}}
+			</p>
+
+		{% endfor %}
+	{% endif %}
+
+{% endblock %}

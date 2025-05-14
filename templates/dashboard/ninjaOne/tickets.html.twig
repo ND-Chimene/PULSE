@@ -1,0 +1,12 @@
+{% block body %}
+
+	{% if tickets is defined %}
+		{% for item in tickets %}
+			<p>
+				{{item.displayName}}
+			</p>
+
+		{% endfor %}
+	{% endif %}
+
+{% endblock %}

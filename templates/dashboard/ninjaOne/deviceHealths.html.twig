@@ -1,0 +1,12 @@
+{% block body %}
+
+	{% if deviceHealths is defined %}
+		{% for item in deviceHealths %}
+			<p>
+				{{item.healthStatus}}
+			</p>
+
+		{% endfor %}
+	{% endif %}
+
+{% endblock %}

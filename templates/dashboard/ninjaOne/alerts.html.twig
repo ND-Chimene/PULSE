@@ -1,0 +1,12 @@
+{% block body %}
+
+	{% if alerts is defined %}
+		{% for item in alerts %}
+			<p>
+				{{item.sourceType}}
+			</p>
+
+		{% endfor %}
+	{% endif %}
+
+{% endblock %}

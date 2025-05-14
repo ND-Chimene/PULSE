@@ -1,0 +1,13 @@
+{% block body %}
+
+	{% if vulnerabilities is defined %}
+		{% for item in vulnerabilities %}
+			<p>
+				{{item.fileName}}
+				{{item.vendor}}
+			</p>
+
+		{% endfor %}
+	{% endif %}
+
+{% endblock %}
