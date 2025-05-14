@@ -12,8 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 final class NinjaOneController extends AbstractController
 {
-        #[Route('/ninjaone/tickets', name: 'app_ninja_one_tickets', methods: ['GET'])]
-    public function getTicketS(Request $request, NinjaOneApiService $ninjaOneApiService): Response
+    #[Route('/ninjaone/tickets', name: 'app_ninja_one_tickets', methods: ['GET'])]
+    public function getTicketS( NinjaOneApiService $ninjaOneApiService): Response
     {
 
         $clientId = "ninjaOneApiClientId";
@@ -27,8 +27,8 @@ final class NinjaOneController extends AbstractController
         ]);
     }
 
-        #[Route('/ninjaone/patches', name: 'app_ninja_one_patches', methods: ['GET'])]
-    public function getPatches(Request $request, NinjaOneApiService $ninjaOneApiService): Response
+    #[Route('/ninjaone/patches', name: 'app_ninja_one_patches', methods: ['GET'])]
+    public function getPatches(NinjaOneApiService $ninjaOneApiService): Response
     {
 
         $clientId = "ninjaOneApiClientId";
@@ -42,8 +42,8 @@ final class NinjaOneController extends AbstractController
         ]);
     }
 
-        #[Route('/ninjaone/alerts', name: 'app_ninja_one_alerts', methods: ['GET'])]
-    public function getAlerts(Request $request, NinjaOneApiService $ninjaOneApiService): Response
+    #[Route('/ninjaone/alerts', name: 'app_ninja_one_alerts', methods: ['GET'])]
+    public function getAlerts(NinjaOneApiService $ninjaOneApiService): Response
     {
 
         $clientId = "ninjaOneApiClientId";
@@ -57,8 +57,8 @@ final class NinjaOneController extends AbstractController
         ]);
     }
 
-        #[Route('/ninjaone/vulnerabilities', name: 'app_ninja_one_vulnerabilities', methods: ['GET'])]
-    public function getVulnerabilities(Request $request, NinjaOneApiService $ninjaOneApiService): Response
+    #[Route('/ninjaone/vulnerabilities', name: 'app_ninja_one_vulnerabilities', methods: ['GET'])]
+    public function getVulnerabilities(NinjaOneApiService $ninjaOneApiService): Response
     {
 
         $clientId = "ninjaOneApiClientId";
@@ -72,18 +72,18 @@ final class NinjaOneController extends AbstractController
         ]);
     }
 
-        #[Route('/ninjaone/devices', name: 'app_ninja_one_devices', methods: ['GET'])]
-    public function getDevices(Request $request, NinjaOneApiService $ninjaOneApiService): Response
+    #[Route('/ninjaone/deviceHealths', name: 'app_ninja_one_deviceHealths', methods: ['GET'])]
+    public function getDeviceHealths(NinjaOneApiService $ninjaOneApiService): Response
     {
 
         $clientId = "ninjaOneApiClientId";
         $clientSecret = 'ninjaOneApiClientSecret';
 
         $ninjaOneApiService->authenticate($clientId, $clientSecret);
-        $devices = $ninjaOneApiService->getDeviceHealths();
+        $deviceHealths = $ninjaOneApiService->getDeviceHealths();
 
-        return $this->render('dashboard/ninjaOne/s.html.twig', [
-            'devices' => $devices,
+        return $this->render('dashboard/ninjaOne/deviceHealths.html.twig', [
+            'deviceHealths' => $deviceHealths,
         ]);
     }
 }
