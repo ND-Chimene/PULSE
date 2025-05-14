@@ -32,10 +32,10 @@ class DashboardController extends AbstractController
 
             return $this->render('dashboard/index.html.twig', [
                 'tickets' => $tickets,
-                'patches' => $patches,
+                'patches' => $patches["results"],
                 'alerts' => $alerts,
                 'vulnerabilities' => $vulnerabilities,
-                'deviceHealths' => $deviceHealths,
+                'deviceHealths' => $deviceHealths["results"],
             ]);
         } catch (\RuntimeException $e) {
             $this->addFlash('error', 'Erreur de connexion à NinjaOne: ' . $e->getMessage());
