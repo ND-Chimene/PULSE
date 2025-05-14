@@ -76,7 +76,7 @@ class NinjaOneApiService
         return $expiry !== null && $expiry > time();
     }
 
-    public function getOrganizations(): array
+    public function getTickets(): array
     {
         if (!$this->hasValidTokens()) {
             $this->authenticate();
@@ -84,7 +84,79 @@ class NinjaOneApiService
 
         $this->accessToken = $this->getSession()->get('ninja_access_token');
 
-        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/organizations", [
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/ticketing/statuses", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        return $response->toArray();
+    }
+
+        public function getPatches(): array
+    {
+        if (!$this->hasValidTokens()) {
+            $this->authenticate();
+        }
+
+        $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/queries/os-patches", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        return $response->toArray();
+    }
+
+        public function getAlerts(): array
+    {
+        if (!$this->hasValidTokens()) {
+            $this->authenticate();
+        }
+
+        $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/alerts", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        return $response->toArray();
+    }
+
+        public function getVulnerabilities(): array
+    {
+        if (!$this->hasValidTokens()) {
+            $this->authenticate();
+        }
+
+        $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/vulnerability/scan-groups", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        return $response->toArray();
+    }
+
+        public function getDeviceHealths(): array
+    {
+        if (!$this->hasValidTokens()) {
+            $this->authenticate();
+        }
+
+        $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/queries/device-health", [
             'headers' => [
                 'Authorization' => "Bearer {$this->accessToken}",
                 'Content-Type' => 'application/json',
