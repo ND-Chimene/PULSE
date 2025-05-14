@@ -4,6 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    NINJAONE_API_URL: '%env(NINJAONE_API_URL)%'
+    NINJAONE_GRANT_TYPE: '%env(NINJAONE_GRANT_TYPE)%'
+    NINJAONE_API_CLIENT_ID: '%env(NINJAONE_CLIENT_ID)%'
+    NINJAONE_API_CLIENT_SECRET: '%env(NINJAONE_CLIENT_SECRET)%'
+    NINJAONE_SCOPE: '%env(NINJAONE_SCOPE)%'
 
 services:
     # default configuration for services in *this* file
