@@ -17,6 +17,15 @@ Encore
         config.useBuiltIns = 'usage';
         config.corejs = '3.38';
     })
-    .enablePostCssLoader();
+    .enablePostCssLoader()
+    .copyFiles({
+        from: './assets/images',
+        to: 'images/[path][name].[hash:8].[ext]'
+    })
+    // Configuration pour les icônes
+    .copyFiles({
+        from: './assets/icons',
+        to: 'icons/[path][name].[hash:8].[ext]'
+    });
 
 module.exports = Encore.getWebpackConfig();
