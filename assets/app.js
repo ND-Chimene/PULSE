@@ -6,4 +6,10 @@
  */
 import './styles/app.css';
 
+// Images
+import './images/icon.webp';
+
+// Icons
+import './icons/login.svg';
+
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
