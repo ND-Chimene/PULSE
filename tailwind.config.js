@@ -17,7 +17,7 @@ module.exports = {
             },
             backgroundImage: {
                 'red-to-black': 'linear-gradient(to bottom, #AA4141 80%, #2C2C2C 100%)',
-                'black-to-red': 'linear-gradient(to bottom, #2C2C2C 10%, #AA4141 100%)',
+                'black-to-red': 'linear-gradient(to bottom, #2C2C2C 5%, #AA4141 100%)',
             },
         },
     },
