@@ -20,23 +20,9 @@ class UserForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class, [
-                'row_attr' => ['class' => 'w-full flex flex-col gap-2'],
-                'label' => 'Votre adresse e-mail',
-                'attr' => ['class' => 'form-control text-primary-black rounded-lg px-5 py-2'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez entrer une adresse email'
-                    ]),
-                    new Email([
-                        'message' => 'L\'adresse email {{ value }} n\'est pas valide'
-                    ])
-                ]
-            ])
             ->add('firstname', TextType::class, [
-                'row_attr' => ['class' => 'w-full flex flex-col gap-2'],
                 'label' => 'Votre prénom',
-                'attr' => ['class' => 'form-control text-primary-black rounded-lg px-5 py-2'],
+                'attr' => ['class' => 'text-primary-black rounded-lg px-5 py-2'],
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -51,9 +37,8 @@ class UserForm extends AbstractType
                 ]
             ])
             ->add('lastname', TextType::class, [
-                'row_attr' => ['class' => 'w-full flex flex-col gap-2'],
                 'label' => 'Votre nom',
-                'attr' => ['class' => 'form-control text-primary-black rounded-lg px-5 py-2'],
+                'attr' => ['class' => 'text-primary-black rounded-lg px-5 py-2'],
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -67,14 +52,25 @@ class UserForm extends AbstractType
                     ])
                 ]
             ])
+            ->add('email', EmailType::class, [
+                'label' => 'Votre adresse e-mail',
+                'attr' => ['class' => 'text-primary-black rounded-lg px-5 py-2'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer une adresse email'
+                    ]),
+                    new Email([
+                        'message' => 'L\'adresse email {{ value }} n\'est pas valide'
+                    ])
+                ]
+            ])
+
             ->add('password', PasswordType::class, [
                 'mapped' => false,
-                'row_attr' => ['class' => 'w-full flex flex-row justify-between gap-10'],
-                'label' => 'Saisisez votre mot de passe pour mettre à jour votre profil',
-                'label_attr' => ['class' => 'form-label text-primary-black rounded-lg px-5 py-2'],
+                'label' => 'Mot de passe',
                 'attr' => [
-                    'placeholder' => 'Mot de passe',
-                    'class' => 'form-control',
+                    'class' => 'text-primary-black rounded-lg px-5 py-2',
+                    'placeholder' => 'Mot de passe'
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -82,14 +78,14 @@ class UserForm extends AbstractType
                     ]),
                     new Length([
                         'min' => 12,
-                        'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
                         'max' => 4096,
+                        'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
                     ])
                 ]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer les modifications',
-                'attr' => ['class' => 'w-full text-primary-white bg-primary-black rounded-lg px-5 py-2 flex items-center justify-center gap-2 hover:bg-secondary-black transition-all duration-300'],
+                'attr' => ['class' => 'w-96 my-auto text-primary-white bg-primary-black rounded-lg px-5 py-2 flex items-center justify-center gap-2 hover:bg-secondary-black transition-all duration-300'],
             ])
         ;
     }
