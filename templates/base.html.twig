@@ -1,18 +1,62 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+
+	<body>
+		{% block body %}
+			{% if not app.request.get('_route') == 'app_login' %}
+				<section class="bg-black-to-red h-screen p-6 relative">
+					<div class="flex flex-row gap-8 items-center justify-between h-full">
+						<header class="bg-primary-white flex flex-col items-center justify-between px-4 py-6 h-full w-24 rounded-2xl drop-shadow-lg">
+							<a href="/" class='w-full aspect-square bg-primary-white drop-shadow-lg rounded-2xl p-2'>
+								<img src="{{ asset('build/images/icon.webp') }}" class="w-full h-full object-contain" alt="Icon Computis">
+							</a>
+
+							<div class="flex flex-col items-center justify-between gap-16">
+								<a href="/" class='w-9 h-auto aspect-square'>
+									<img src="{{ asset('build/icons/ninjaOne.svg') }}" class="w-full h-full object-contain rounded-full" alt="Icon NinjaOne">
+								</a>
+
+								<a href="/" class='w-9 h-auto  aspect-square'>
+									<img src="{{ asset('build/icons/kaseya.svg') }}" class="w-full h-full object-contain" alt="Icon Kaseya">
+								</a>
+
+								<a href="/" class='w-9 h-auto  aspect-square'>
+									<img src="{{ asset('build/icons/bitdefender.svg') }}" alt="Icon Bitdefender">
+								</a>
+
+								<a href="/admin" class='w-9 h-auto aspect-square'>
+									<img src="{{ asset('build/icons/settings.svg') }}" class="w-full h-full object-contain" alt="Icon Settings">
+								</a>
+							</div>
+
+							<a href="logout" class='w-full h-auto aspect-square bg-primary-white drop-shadow-lg rounded-2xl p-3'>
+								<img src="{{ asset('build/icons/logout.svg') }}" class="w-full h-full object-contain filter invert" alt="Icon Logout">
+							</a>
+						</header>
+
+						<main class="h-full w-full bg-primary-white rounded-2xl drop-shadow-lg">
+							{{ block('page_content') }}
+						</main>
+					</div>
+				</section>
+			{% endif %}
+		{% endblock %}
+
+		{% block page_content %}{% endblock %}
+	</body>
 </html>
