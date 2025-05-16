@@ -18,7 +18,7 @@
 
 	<body>
 		{% block body %}
-			{% if not app.request.get('_route') == 'app_login' %}
+			{% if app.request.get('_route') != 'app_login' %}
 				<section class="bg-black-to-red h-screen p-6 relative">
 					<div class="flex flex-row gap-8 items-center justify-between h-full">
 						<header class="bg-primary-white flex flex-col items-center justify-between px-4 py-6 h-full w-24 rounded-2xl drop-shadow-lg">
