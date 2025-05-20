@@ -1,12 +1,16 @@
 {% block page_content %}
-
-	{% if deviceHealths is defined %}
-		{% for item in deviceHealths %}
-			<p>
-				{{item.healthStatus}}
-			</p>
-
-		{% endfor %}
-	{% endif %}
-
+    {% if statusHealth is defined and statusHealth is not empty and healthCounts is defined and healthCounts is not empty %}
+        <div class="grid grid-cols-4 gap-4">
+            {% for i in 0..statusHealth|length - 1 %}
+                <div class="p-4 bg-white rounded-lg shadow">
+                    <h3 class="font-bold">{{ statusHealth[i] }}</h3>
+                    <p class="text-2xl">{{ healthCounts[i] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="p-4 bg-white rounded-lg shadow">
+            <h3 class="font-bold">Aucun appareil disponible</h3>
+        </div>
+    {% endif %}
 {% endblock %}
