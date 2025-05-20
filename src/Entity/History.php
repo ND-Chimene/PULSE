@@ -18,8 +18,6 @@ class History
     // /**
     //  * @var Collection<int, User>
     //  */
-    // #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'history', orphanRemoval: true)]
-    // private Collection $userId;
 
     #[ORM\Column]
     private ?\DateTime $login_date = null;
@@ -36,45 +34,14 @@ class History
     #[ORM\Column(length: 255)]
     private ?string $browser = null;
 
-    // public function __construct()
-    // {
-    //     $this->userId = new ArrayCollection();
-    // }
+    #[ORM\ManyToOne(inversedBy: 'history')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
-    // /**
-    //  * @return Collection<int, User>
-    //  */
-    // public function getUserId(): Collection
-    // {
-    //     return $this->userId;
-    // }
-
-    // public function addUserId(User $userId): static
-    // {
-    //     if (!$this->userId->contains($userId)) {
-    //         $this->userId->add($userId);
-    //         $userId->setHistory($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeUserId(User $userId): static
-    // {
-    //     if ($this->userId->removeElement($userId)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($userId->getHistory() === $this) {
-    //             $userId->setHistory(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
 
     public function getLoginDate(): ?\DateTime
     {
@@ -132,6 +99,18 @@ class History
     public function setBrowser(string $browser): static
     {
         $this->browser = $browser;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

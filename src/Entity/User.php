@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -44,9 +46,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    // #[ORM\ManyToOne(inversedBy: 'userId')]
-    // #[ORM\JoinColumn(nullable: false)]
-    // private ?History $history = null;
+    /**
+     * @var Collection<int, History>
+     */
+    #[ORM\OneToMany(targetEntity: History::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $history;
+
+    public function __construct()
+    {
+        $this->history = new ArrayCollection();
+    }
+
 
     #[ORM\PrePersist]
     public function setCreatedAtValue()
@@ -186,15 +196,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // public function getHistory(): ?History
-    // {
-    //     return $this->history;
-    // }
+    /**
+     * @return Collection<int, History>
+     */
+    public function getHistory(): Collection
+    {
+        return $this->history;
+    }
 
-    // public function setHistory(?History $history): static
-    // {
-    //     $this->history = $history;
+    public function addHistory(History $history): static
+    {
+        if (!$this->history->contains($history)) {
+            $this->history->add($history);
+            $history->setUser($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
+
+    public function removeHistory(History $history): static
+    {
+        if ($this->history->removeElement($history)) {
+            // set the owning side to null (unless already changed)
+            if ($history->getUser() === $this) {
+                $history->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 }
