@@ -1,12 +1,12 @@
 {% block page_content %}
-
-	{% if tickets is defined %}
-		{% for item in tickets %}
-			<p>
-				{{item.displayName}}
-			</p>
-
-		{% endfor %}
+	{% if statusTickets is defined and ticketCounts is defined %}
+		<div class="grid grid-cols-4 gap-4">
+			{% for i in 0..statusTickets|length - 1 %}
+				<div class="p-4 bg-white rounded-lg shadow">
+					<h3 class="font-bold">{{ statusTickets[i] }}</h3>
+					<p class="text-2xl">{{ ticketCounts[i] }}</p>
+				</div>
+			{% endfor %}
+		</div>
 	{% endif %}
-
 {% endblock %}

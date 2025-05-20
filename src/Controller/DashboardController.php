@@ -24,15 +24,39 @@ class DashboardController extends AbstractController
                 $this->ninjaOneApiService->authenticate();
             }
 
+            // Tickets
             $tickets = $this->ninjaOneApiService->getTickets();
+            $statusTickets = [];
+            $ticketCounts = [];
+            foreach ($tickets as $ticket) {
+                if (isset($ticket['displayName'])) {
+                    $status = $ticket['displayName'];
+                    $statusTickets[] = $status;
+                }
+            }
+            $statusTickets = array_slice($statusTickets, 0, 4);
+            if (!empty($statusTickets)) {
+                $counts = array_count_values($statusTickets);
+                $statusTickets = array_keys($counts);
+                $ticketCounts = array_values($counts);
+            }
+
+            // Patches
             $patches = $this->ninjaOneApiService->getPatches();
+
+            // Alerts
             $alerts = $this->ninjaOneApiService->getAlerts();
+
+            // Vulnerabilities
             $vulnerabilities = $this->ninjaOneApiService->getVulnerabilities();
+
+            // Device Healths
             $deviceHealths = $this->ninjaOneApiService->getDeviceHealths();
 
             return $this->render('dashboard/index.html.twig', [
-                'tickets' => $tickets,
-                'patches' => $patches["results"],
+                'statusTickets' => $statusTickets,
+                'ticketCounts' => $ticketCounts,
+                'patches' => $patches,
                 'alerts' => $alerts,
                 'vulnerabilities' => $vulnerabilities,
                 'deviceHealths' => $deviceHealths["results"],
