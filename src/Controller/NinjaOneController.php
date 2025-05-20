@@ -13,9 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class NinjaOneController extends AbstractController
 {
     #[Route('/ninjaone/tickets', name: 'app_ninja_one_tickets', methods: ['GET'])]
-    public function getTicketS( NinjaOneApiService $ninjaOneApiService): Response
+    public function getTickets(NinjaOneApiService $ninjaOneApiService): Response
     {
-
         $clientId = "ninjaOneApiClientId";
         $clientSecret = 'ninjaOneApiClientSecret';
 
