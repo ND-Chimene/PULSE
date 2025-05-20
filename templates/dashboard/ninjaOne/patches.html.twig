@@ -1,12 +1,16 @@
 {% block page_content %}
-
-	{% if patches is defined %}
-		{% for item in patches %}
-			<p>
-				{{item.status}}
-			</p>
-
-		{% endfor %}
-	{% endif %}
-
+    {% if statusPatches is defined and statusPatches is not empty and patchesCounts is defined and patchesCounts is not empty %}
+        <div class="grid grid-cols-4 gap-4">
+            {% for i in 0..statusPatches|length - 1 %}
+                <div class="p-4 bg-white rounded-lg shadow">
+                    <h3 class="font-bold">{{ statusPatches[i] }}</h3>
+                    <p class="text-2xl">{{ patchesCounts[i] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="p-4 bg-white rounded-lg shadow">
+            <h3 class="font-bold">Aucun patch disponible</h3>
+        </div>
+    {% endif %}
 {% endblock %}

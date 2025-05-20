@@ -42,7 +42,20 @@ class DashboardController extends AbstractController
             }
 
             // Patches
-            $patches = $this->ninjaOneApiService->getPatches();
+            $patches = $this->ninjaOneApiService->getPatches()["results"];
+            $statusPatches = [];
+            $patchesCounts = [];
+            foreach ($patches as $patch) {
+                if (isset($patch['status'])) {
+                    $status = $patch['status'];
+                    $statusPatches[] = $status;
+                }
+            }
+            if (!empty($statusPatches)) {
+                $counts = array_count_values($statusPatches);
+                $statusPatches = array_keys($counts);
+                $patchesCounts = array_values($counts);
+            }
 
             // Alerts
             $alerts = $this->ninjaOneApiService->getAlerts();
@@ -56,7 +69,8 @@ class DashboardController extends AbstractController
             return $this->render('dashboard/index.html.twig', [
                 'statusTickets' => $statusTickets,
                 'ticketCounts' => $ticketCounts,
-                'patches' => $patches,
+                'statusPatches' => $statusPatches,
+                'patchesCounts' => $patchesCounts,
                 'alerts' => $alerts,
                 'vulnerabilities' => $vulnerabilities,
                 'deviceHealths' => $deviceHealths["results"],
