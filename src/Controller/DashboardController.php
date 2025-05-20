@@ -59,21 +59,63 @@ class DashboardController extends AbstractController
 
             // Alerts
             $alerts = $this->ninjaOneApiService->getAlerts();
+            $statusAlerts = [];
+            $alertsCounts = [];
+            foreach ($alerts as $alert) {
+                if (isset($alert['sourceType'])) {
+                    $status = $alert['sourceType'];
+                    $statusAlerts[] = $status;
+                }
+            }
+            if (!empty($statusAlerts)) {
+                $counts = array_count_values($statusAlerts);
+                $statusAlerts = array_keys($counts);
+                $alertsCounts = array_values($counts);
+            }
 
             // Vulnerabilities
             $vulnerabilities = $this->ninjaOneApiService->getVulnerabilities();
+            $vendorVulnerability = [];
+            $filenameVulnerability = [];
+            foreach ($vulnerabilities as $vulnerability) {
+                if (isset($vulnerability['vendor'])) {
+                    $vendor = $vulnerability['vendor'];
+                    $vendorVulnerability[] = $vendor;
+                }
+                if (isset($vulnerability['fileName'])) {
+                    $filename = $vulnerability['fileName'];
+                    $filenameVulnerability[] = $filename;
+                }
+            }
+
 
             // Device Healths
-            $deviceHealths = $this->ninjaOneApiService->getDeviceHealths();
+            $deviceHealths = $this->ninjaOneApiService->getDeviceHealths()["results"];
+            $statusHealth = [];
+            $healthCounts = [];
+            foreach ($deviceHealths as $deviceHealth) {
+                if (isset($deviceHealth['healthStatus'])) {
+                    $status = $deviceHealth['healthStatus'];
+                    $statusHealth[] = $status;
+                }
+            }
+            if (!empty($statusHealth)) {
+                $counts = array_count_values($statusHealth);
+                $statusHealth = array_keys($counts);
+                $healthCounts = array_values($counts);
+            }
 
             return $this->render('dashboard/index.html.twig', [
                 'statusTickets' => $statusTickets,
                 'ticketCounts' => $ticketCounts,
                 'statusPatches' => $statusPatches,
                 'patchesCounts' => $patchesCounts,
-                'alerts' => $alerts,
-                'vulnerabilities' => $vulnerabilities,
-                'deviceHealths' => $deviceHealths["results"],
+                'statusAlerts' => $statusAlerts,
+                'alertsCounts' => $alertsCounts,
+                'vendorVulnerability' => $vendorVulnerability,
+                'filenameVulnerability' => $filenameVulnerability,
+                'statusHealth' => $statusHealth,
+                'healthCounts' => $healthCounts,
             ]);
         } catch (\RuntimeException $e) {
             $this->addFlash('error', 'Erreur de connexion à NinjaOne: ' . $e->getMessage());
