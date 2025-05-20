@@ -24,7 +24,7 @@ class DashboardController extends AbstractController
                 $this->ninjaOneApiService->authenticate();
             }
 
-            // Tickets
+            // All Tickets
             $tickets = $this->ninjaOneApiService->getTickets();
             $statusTickets = [];
             $ticketCounts = [];
@@ -41,7 +41,11 @@ class DashboardController extends AbstractController
                 $ticketCounts = array_values($counts);
             }
 
-            // Patches
+            // All Open Tickets
+            $openTickets = array_slice($statusTickets, 1, 3);
+            $openTicketCounts = array_sum(array_slice($ticketCounts, 1, 3));
+
+            // All OS Patches
             $patches = $this->ninjaOneApiService->getPatches()["results"];
             $statusPatches = [];
             $patchesCounts = [];
@@ -57,7 +61,11 @@ class DashboardController extends AbstractController
                 $patchesCounts = array_values($counts);
             }
 
-            // Alerts
+            // All Unpatches
+            $unpatches = array_slice($statusPatches, 0, 2);
+            $unpatchesCounts = array_sum(array_slice($patchesCounts, 0, 2));
+
+            // All Alerts
             $alerts = $this->ninjaOneApiService->getAlerts();
             $statusAlerts = [];
             $alertsCounts = [];
@@ -73,7 +81,7 @@ class DashboardController extends AbstractController
                 $alertsCounts = array_values($counts);
             }
 
-            // Vulnerabilities
+            // All Vulnerabilities
             $vulnerabilities = $this->ninjaOneApiService->getVulnerabilities();
             $vendorVulnerability = [];
             $filenameVulnerability = [];
@@ -89,7 +97,7 @@ class DashboardController extends AbstractController
             }
 
 
-            // Device Healths
+            // All Devices Healths
             $deviceHealths = $this->ninjaOneApiService->getDeviceHealths()["results"];
             $statusHealth = [];
             $healthCounts = [];
@@ -108,8 +116,12 @@ class DashboardController extends AbstractController
             return $this->render('dashboard/index.html.twig', [
                 'statusTickets' => $statusTickets,
                 'ticketCounts' => $ticketCounts,
+                'openTickets' => $openTickets,
+                'openTicketCounts' => $openTicketCounts,
                 'statusPatches' => $statusPatches,
                 'patchesCounts' => $patchesCounts,
+                'unpatches' => $unpatches,
+                'unpatchesCounts' => $unpatchesCounts,
                 'statusAlerts' => $statusAlerts,
                 'alertsCounts' => $alertsCounts,
                 'vendorVulnerability' => $vendorVulnerability,
