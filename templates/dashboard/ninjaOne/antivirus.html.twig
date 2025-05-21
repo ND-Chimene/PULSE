@@ -1,0 +1,17 @@
+{% block page_content %}
+<h3>Antivirus</h3>
+    {% if vendorVulnerability is defined and vendorVulnerability is not empty and filenameVulnerability is defined and filenameVulnerability is not empty %}
+        <div class="grid grid-cols-4 gap-4">
+            {% for i in 0..vendorVulnerability|length - 1 %}
+                <div class="p-4 bg-white rounded-lg shadow">
+                    <h3 class="font-bold">{{ vendorVulnerability[i] }}</h3>
+                    <p class="text-2xl">{{ filenameVulnerability[i] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="p-4 bg-white rounded-lg shadow">
+            <h3 class="font-bold">Aucune alerte disponible</h3>
+        </div>
+    {% endif %}
+{% endblock %}
