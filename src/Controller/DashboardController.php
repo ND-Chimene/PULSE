@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Service\NinjaOneApiService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractController
 {
     private NinjaOneApiService $ninjaOneApiService;
