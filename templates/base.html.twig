@@ -31,11 +31,11 @@
 									<img src="{{ asset('build/icons/ninjaOne.svg') }}" class="w-full h-full object-contain rounded-full" alt="Icon NinjaOne">
 								</a>
 
-								<a href="/" class='w-9 h-auto  aspect-square'>
+								<a href="/" class='w-9 h-auto aspect-square'>
 									<img src="{{ asset('build/icons/kaseya.svg') }}" class="w-full h-full object-contain" alt="Icon Kaseya">
 								</a>
 
-								<a href="/" class='w-9 h-auto  aspect-square'>
+								<a href="/" class='w-9 h-auto aspect-square'>
 									<img src="{{ asset('build/icons/bitdefender.svg') }}" alt="Icon Bitdefender">
 								</a>
 
@@ -49,7 +49,26 @@
 							</a>
 						</header>
 
-						<main class="h-full w-full bg-[#FCFCFC] rounded-2xl drop-shadow-lg px-4 py-6">
+						<main class="h-full w-full bg-primary-white rounded-2xl drop-shadow-lg p-10">
+							<div class="w-full h-auto flex flex-row justify-between items-center">
+								<h1 class="text-2xl font-semibold">Bienvenue {{app.user.lastname}}</h1>
+								<div class="flex flex-row gap-4 items-center justify-center">
+									<div class="h-12 w-auto flex flex-row gap-x-2 items-center justify-center text-xl">
+										<p id="clock">
+											{{ "now" | date("d/m/Y H:i", "Europe/Paris") }}
+										</p>
+									</div>
+									<div class="h-10 w-auto bg-secondary-black text-primary-white rounded-2xl flex flex-row gap-x-2 items-center justify-center px-4">
+										<span class="w-6 h-6">
+											<img src="{{ asset('build/icons/person.svg') }}" class="w-full h-full object-contain" alt="Icon Person">
+										</span>
+										<p class="text-sm">
+											{{ app.user.lastname }}
+										</p>
+									</div>
+
+								</div>
+							</div>
 							{{ block('page_content') }}
 						</main>
 					</div>
