@@ -56,18 +56,18 @@ final class NinjaOneController extends AbstractController
         ]);
     }
 
-    #[Route('/ninjaone/vulnerabilities', name: 'app_ninja_one_vulnerabilities', methods: ['GET'])]
-    public function getVulnerabilities(NinjaOneApiService $ninjaOneApiService): Response
+    #[Route('/ninjaone/antivirus', name: 'app_ninja_one_antivirus', methods: ['GET'])]
+    public function getAntivirus(NinjaOneApiService $ninjaOneApiService): Response
     {
 
         $clientId = "ninjaOneApiClientId";
         $clientSecret = 'ninjaOneApiClientSecret';
 
         $ninjaOneApiService->authenticate($clientId, $clientSecret);
-        $vulnerabilities = $ninjaOneApiService->getVulnerabilities();
+        $antivirus = $ninjaOneApiService->getAntivirus();
 
-        return $this->render('dashboard/ninjaOne/vulnerabilities.html.twig', [
-            'vulnerabilities' => $vulnerabilities,
+        return $this->render('dashboard/ninjaOne/antivirus.html.twig', [
+            'vulnerabilities' => $antivirus,
         ]);
     }
 
