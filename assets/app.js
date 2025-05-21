@@ -4,6 +4,8 @@
  * This file will be included onto the page via the importmap() Twig function,
  * which should already be in your base.html.twig.
  */
+
+// CSS
 import './styles/app.css';
 
 // Images
@@ -12,4 +14,6 @@ import './images/icon.webp';
 // Icons
 import './icons/login.svg';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+// JS
+import './js/update.js';
+
