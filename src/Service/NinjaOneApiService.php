@@ -130,7 +130,7 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
-        public function getVulnerabilities(): array
+        public function getAntivirus(): array
     {
         if (!$this->hasValidTokens()) {
             $this->authenticate();
