@@ -30,17 +30,13 @@ class DashboardController extends AbstractController
             $tickets = $this->ninjaOneApiService->getTickets();
             $statusTickets = [];
             $ticketCounts = [];
+            $desiredTickets = ['Tickets non attribués', 'Tickets ouverts', 'Tickets Non Résolus'];
+
             foreach ($tickets as $ticket) {
-                if (isset($ticket['displayName'])) {
-                    $status = $ticket['displayName'];
-                    $statusTickets[] = $status;
+                if (isset($ticket['name']) && in_array($ticket['name'], $desiredTickets)) {
+                    $statusTickets[] = $ticket['name'];
+                    $ticketCounts[] = (int)($ticket['ticketCount'] ?? 0);
                 }
-            }
-            $statusTickets = array_slice($statusTickets, 0, 4);
-            if (!empty($statusTickets)) {
-                $counts = array_count_values($statusTickets);
-                $statusTickets = array_keys($counts);
-                $ticketCounts = array_values($counts);
             }
 
             // All Open Tickets
@@ -73,8 +69,8 @@ class DashboardController extends AbstractController
             $alertsCounts = [];
             foreach ($alerts as $alert) {
                 if (isset($alert['sourceType'])) {
-                    $status = $alert['sourceType'];
-                    $statusAlerts[] = $status;
+                    $source = $alert['sourceType'];
+                    $statusAlerts[] = $source;
                 }
             }
             if (!empty($statusAlerts)) {
@@ -83,19 +79,20 @@ class DashboardController extends AbstractController
                 $alertsCounts = array_values($counts);
             }
 
-            // All Vulnerabilities
-            $vulnerabilities = $this->ninjaOneApiService->getVulnerabilities();
-            $vendorVulnerability = [];
-            $filenameVulnerability = [];
-            foreach ($vulnerabilities as $vulnerability) {
-                if (isset($vulnerability['vendor'])) {
-                    $vendor = $vulnerability['vendor'];
-                    $vendorVulnerability[] = $vendor;
+            // All Antivirus
+            $antivirus = $this->ninjaOneApiService->getAntivirus()["results"];
+            $statusAntivirus = [];
+            $antivirusCounts = [];
+            foreach ($antivirus as $antivirus) {
+                if (isset($antivirus['name'])) {
+                    $name = $antivirus['name'];
+                    $statusAntivirus[] = $name;
                 }
-                if (isset($vulnerability['fileName'])) {
-                    $filename = $vulnerability['fileName'];
-                    $filenameVulnerability[] = $filename;
-                }
+            }
+            if (!empty($statusAntivirus)) {
+                $counts = array_count_values($statusAntivirus);
+                $statusAntivirus = array_keys($counts);
+                $antivirusCounts = array_values($counts);
             }
 
 
@@ -126,8 +123,8 @@ class DashboardController extends AbstractController
                 'unpatchesCounts' => $unpatchesCounts,
                 'statusAlerts' => $statusAlerts,
                 'alertsCounts' => $alertsCounts,
-                'vendorVulnerability' => $vendorVulnerability,
-                'filenameVulnerability' => $filenameVulnerability,
+                'statusAntivirus' => $statusAntivirus,
+                'antivirusCounts' => $antivirusCounts,
                 'statusHealth' => $statusHealth,
                 'healthCounts' => $healthCounts,
             ]);
