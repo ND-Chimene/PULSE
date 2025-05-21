@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle connexion à votre compte{% endblock %}
+
+{% block body %}
+    <h1>Bonjour {{ user.firstname }},</h1>
+
+    <p>Nous avons détecté une nouvelle connexion sur PULSE.</p>
+    <p>Détails de la connexion :</p>
+    <ul>
+        <li>Date et heure : {{ date|date('d/m/Y H:i:s') }}</li>
+        <li>Adresse IP : {{ ip }}</li>
+        <li>Appareil : {{ device }}</li>
+        <li>Système d'exploitation : {{ os }}</li>
+        <li>Navigateur : {{ browser }}</li>
+    </ul>
+
+{% endblock %}
