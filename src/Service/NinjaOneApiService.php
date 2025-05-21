@@ -84,7 +84,7 @@ class NinjaOneApiService
 
         $this->accessToken = $this->getSession()->get('ninja_access_token');
 
-        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/ticketing/statuses", [
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/ticketing/trigger/boards", [
             'headers' => [
                 'Authorization' => "Bearer {$this->accessToken}",
                 'Content-Type' => 'application/json',
@@ -138,13 +138,12 @@ class NinjaOneApiService
 
         $this->accessToken = $this->getSession()->get('ninja_access_token');
 
-        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/vulnerability/scan-groups", [
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/queries/antivirus-threats", [
             'headers' => [
                 'Authorization' => "Bearer {$this->accessToken}",
                 'Content-Type' => 'application/json',
             ],
         ]);
-
         return $response->toArray();
     }
 
