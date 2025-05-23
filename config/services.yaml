@@ -34,3 +34,8 @@ services:
             $ninjaOneClientId: '%NINJAONE_API_CLIENT_ID.client_id%'
             $ninjaOneClientSecret: '%NINJAONE_API_CLIENT_SECRET.client_secret%'
             $ninjaOneScope: '%NINJAONE_SCOPE.scope%'
+
+    App\Service\LoginNotificationService: ~
+    App\EventListener\LoginSuccessListener:
+        tags:
+            - { name: kernel.event_listener, event: Symfony\Component\Security\Http\Event\LoginSuccessEvent }
