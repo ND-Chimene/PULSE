@@ -1,0 +1,27 @@
+<header class="bg-[#FCFCFC] flex flex-col items-center justify-between px-4 py-6 h-full w-24 rounded-2xl drop-shadow-lg">
+	<a href="/" class='w-full aspect-square bg-primary-white drop-shadow-lg rounded-2xl p-2'>
+		<img src="{{ asset('build/images/icon.webp') }}" class="w-full h-full object-contain" alt="Icon Computis">
+	</a>
+
+	<div class="flex flex-col items-center justify-between gap-16">
+		<a href="/dashboard/ninjaOne" class='w-9 h-auto aspect-square  {{ title == 'NinjaOne' ? "scale-125" : "scale-100" }} '>
+			<img src="{{ asset('build/icons/ninjaOne.svg') }}" class="w-full h-full object-contain rounded-full" alt="Icon NinjaOne">
+		</a>
+
+		<a href="/" class='w-9 h-auto aspect-square {{ title == '' ? "scale-125" : "scale-100" }} '>
+			<img src="{{ asset('build/icons/kaseya.svg') }}" class="w-full h-full object-contain" alt="Icon Kaseya">
+		</a>
+
+		<a href="/" class='w-9 h-auto aspect-square {{ title == '' ? "scale-125" : "scale-100" }} '>
+			<img src="{{ asset('build/icons/bitdefender.svg') }}" alt="Icon Bitdefender">
+		</a>
+
+		<a href="/admin" class='w-9 h-auto aspect-square {{ title == '' ? "scale-125" : "scale-100" }} '>
+			<img src="{{ asset('build/icons/settings.svg') }}" class="w-full h-full object-contain" alt="Icon Settings">
+		</a>
+	</div>
+
+	<a href="logout" class='w-full h-auto aspect-square bg-primary-white drop-shadow-lg rounded-2xl p-3'>
+		<img src="{{ asset('build/icons/logout.svg') }}" class="w-full h-full object-contain filter invert" alt="Icon Logout">
+	</a>
+</header>
