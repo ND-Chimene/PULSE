@@ -92,8 +92,6 @@ class NinjaOneController extends AbstractController
             $alertsCounts = array_values($counts);
         }
 
-        dump($statusAlerts);
-
         $sallAlerts = array_sum($alertsCounts);
 
         return [
