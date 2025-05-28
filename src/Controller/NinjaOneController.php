@@ -3,86 +3,171 @@
 namespace App\Controller;
 
 use App\Service\NinjaOneApiService;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 
 #[IsGranted('ROLE_ADMIN')]
-final class NinjaOneController extends AbstractController
+
+class NinjaOneController extends AbstractController
 {
-    #[Route('/ninjaone/tickets', name: 'app_ninja_one_tickets', methods: ['GET'])]
-    public function getTickets(NinjaOneApiService $ninjaOneApiService): Response
+    private NinjaOneApiService $ninjaOneApiService;
+
+    public function __construct(NinjaOneApiService $ninjaOneApiService)
     {
-        $clientId = "ninjaOneApiClientId";
-        $clientSecret = 'ninjaOneApiClientSecret';
-
-        $ninjaOneApiService->authenticate($clientId, $clientSecret);
-        $tickets = $ninjaOneApiService->getTickets();
-
-        return $this->render('dashboard/ninjaOne/tickets.html.twig', [
-            'tickets' => $tickets,
-        ]);
+        $this->ninjaOneApiService = $ninjaOneApiService;
     }
 
-    #[Route('/ninjaone/patches', name: 'app_ninja_one_patches', methods: ['GET'])]
-    public function getPatches(NinjaOneApiService $ninjaOneApiService): Response
+
+    private function getTickets(): array
     {
+        $tickets = $this->ninjaOneApiService->getTickets();
 
-        $clientId = "ninjaOneApiClientId";
-        $clientSecret = 'ninjaOneApiClientSecret';
+        $statusTickets = [];
+        $ticketCounts = [];
+        $titleStatusTickets = ['Tickets non attribués', 'Tickets ouverts', 'Tickets Non Résolus'];
 
-        $ninjaOneApiService->authenticate($clientId, $clientSecret);
-        $patches = $ninjaOneApiService->getPatches();
+        foreach ($tickets as $ticket) {
+            if (isset($ticket['name']) && in_array($ticket['name'], $titleStatusTickets)) {
+                $statusTickets[] = $ticket['name'];
+                $ticketCounts[] = (int)($ticket['ticketCount'] ?? 0);
+            }
+        }
+        $openTicketCounts = array_sum(array_slice($ticketCounts, 1, 3));
 
-        return $this->render('dashboard/ninjaOne/patches.html.twig', [
-            'patches' => $patches,
-        ]);
+        return [
+            'statusTickets' => $statusTickets,
+            'ticketCounts' => $ticketCounts,
+            'statusTicketsJson' => json_encode($statusTickets),
+            'ticketCountsJson' => json_encode($ticketCounts),
+            'openTicketCounts' => $openTicketCounts,
+        ];
     }
 
-    #[Route('/ninjaone/alerts', name: 'app_ninja_one_alerts', methods: ['GET'])]
-    public function getAlerts(NinjaOneApiService $ninjaOneApiService): Response
+    private function getPatches(): array
     {
+        $patches = $this->ninjaOneApiService->getPatches()["results"];
+        $statusPatches = [];
+        $patchesCounts = [];
 
-        $clientId = "ninjaOneApiClientId";
-        $clientSecret = 'ninjaOneApiClientSecret';
+        foreach ($patches as $patch) {
+            if (isset($patch['status'])) {
+                $status = $patch['status'];
+                $statusPatches[] = $status;
+            }
+        }
 
-        $ninjaOneApiService->authenticate($clientId, $clientSecret);
-        $alerts = $ninjaOneApiService->getAlerts();
+        if (!empty($statusPatches)) {
+            $counts = array_count_values($statusPatches);
+            $statusPatches = array_keys($counts);
+            $patchesCounts = array_values($counts);
+        }
 
-        return $this->render('dashboard/ninjaOne/alerts.html.twig', [
-            'alerts' => $alerts,
-        ]);
+        $unpatchesCounts = $patchesCounts[0];
+
+        return [
+            'statusPatches' => $statusPatches,
+            'patchesCounts' => $patchesCounts,
+            'statusPatchesJson' => json_encode($statusPatches),
+            'patchesCountsJson' => json_encode($patchesCounts),
+            'unpatchesCounts' => $unpatchesCounts,
+        ];
     }
 
-    #[Route('/ninjaone/antivirus', name: 'app_ninja_one_antivirus', methods: ['GET'])]
-    public function getAntivirus(NinjaOneApiService $ninjaOneApiService): Response
+    private function getAlerts(): array
     {
+        $alerts = $this->ninjaOneApiService->getAlerts();
+        $statusAlerts = [];
+        $alertsCounts = [];
+        foreach ($alerts as $alert) {
+            if (isset($alert['sourceType'])) {
+                $source = $alert['sourceType'];
+                $statusAlerts[] = $source;
+            }
+        }
+        if (!empty($statusAlerts)) {
+            $counts = array_count_values($statusAlerts);
+            $statusAlerts = array_keys($counts);
+            $alertsCounts = array_values($counts);
+        }
 
-        $clientId = "ninjaOneApiClientId";
-        $clientSecret = 'ninjaOneApiClientSecret';
+        dump($statusAlerts);
 
-        $ninjaOneApiService->authenticate($clientId, $clientSecret);
-        $antivirus = $ninjaOneApiService->getAntivirus();
+        $sallAlerts = array_sum($alertsCounts);
 
-        return $this->render('dashboard/ninjaOne/antivirus.html.twig', [
-            'vulnerabilities' => $antivirus,
-        ]);
+        return [
+            'statusAlerts' => $statusAlerts,
+            'alertsCounts' => $alertsCounts,
+            'statusAlertsJson' => json_encode($statusAlerts),
+            'alertsCountsJson' => json_encode($alertsCounts),
+            'allAlerts' => $sallAlerts,
+        ];
     }
 
-    #[Route('/ninjaone/deviceHealths', name: 'app_ninja_one_deviceHealths', methods: ['GET'])]
-    public function getDeviceHealths(NinjaOneApiService $ninjaOneApiService): Response
+    private function getAntivirus(): array
     {
+        $antivirus = $this->ninjaOneApiService->getAntivirus()["results"];
+        $statusAntivirus = [];
+        foreach ($antivirus as $antivirus) {
+            if (isset($antivirus['name'])) {
+                $status = $antivirus['name'];
+                $statusAntivirus[] = $status;
+            }
+        }
+        if (!empty($statusAntivirus)) {
+            $counts = array_count_values($statusAntivirus);
+            $statusAntivirus = array_keys($counts);
+        }
 
-        $clientId = "ninjaOneApiClientId";
-        $clientSecret = 'ninjaOneApiClientSecret';
+        return [
+            'statusAntivirus' => $statusAntivirus,
+        ];
+    }
 
-        $ninjaOneApiService->authenticate($clientId, $clientSecret);
-        $deviceHealths = $ninjaOneApiService->getDeviceHealths();
+    private function getDeviceHealths(): array
+    {
+        $deviceHealths = $this->ninjaOneApiService->getDeviceHealths()["results"];
+        $statusHealth = [];
+        $healthCounts = [];
+        foreach ($deviceHealths as $deviceHealth) {
+            if (isset($deviceHealth['healthStatus'])) {
+                $status = $deviceHealth['healthStatus'];
+                $statusHealth[] = $status;
+            }
+        }
+        if (!empty($statusHealth)) {
+            $counts = array_count_values($statusHealth);
+            $statusHealth = array_keys($counts);
+            $healthCounts = array_values($counts);
+        }
 
-        return $this->render('dashboard/ninjaOne/deviceHealths.html.twig', [
-            'deviceHealths' => $deviceHealths,
+        return [
+            'statusHealth' => $statusHealth,
+            'healthCounts' => $healthCounts,
+            'statusHealthJson' => json_encode($statusHealth),
+            'healthCountsJson' => json_encode($healthCounts),
+        ];
+    }
+
+    public function getAllData(): array
+    {
+        return [
+            'tickets' => $this->getTickets(),
+            'patches' => $this->getPatches(),
+            'alerts' => $this->getAlerts(),
+            'antivirus' => $this->getAntivirus(),
+            'deviceHealths' => $this->getDeviceHealths(),
+        ];
+    }
+
+    #[Route('/dashboard/ninjaOne', name: 'app_dashboard_ninjaOne', methods: ['GET'])]
+    public function index(): Response
+    {
+        $ninjaOneData = $this->getAllData();
+        return $this->render('dashboard/ninjaOne/index.html.twig', [
+            'ninjaOneData' => $ninjaOneData,
+            'title' => 'NinjaOne',
         ]);
     }
 }
