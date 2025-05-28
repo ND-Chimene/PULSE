@@ -3,7 +3,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}Welcome!
+			{% block title %}Dashboard
+				{{title}}
+				- PULSE
 			{% endblock %}
 		</title>
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
@@ -14,6 +16,7 @@
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
+		<script src="{{ asset('js/chart.min.js') }}"></script>
 	</head>
 
 	<body>
@@ -21,37 +24,13 @@
 			{% if app.request.get('_route') != 'app_login' %}
 				<section class="bg-black-to-red h-screen p-6 relative">
 					<div class="flex flex-row gap-8 items-center justify-between h-full">
-						<header class="bg-[#FCFCFC] flex flex-col items-center justify-between px-4 py-6 h-full w-24 rounded-2xl drop-shadow-lg">
-							<a href="/" class='w-full aspect-square bg-primary-white drop-shadow-lg rounded-2xl p-2'>
-								<img src="{{ asset('build/images/icon.webp') }}" class="w-full h-full object-contain" alt="Icon Computis">
-							</a>
 
-							<div class="flex flex-col items-center justify-between gap-16">
-								<a href="/" class='w-9 h-auto aspect-square'>
-									<img src="{{ asset('build/icons/ninjaOne.svg') }}" class="w-full h-full object-contain rounded-full" alt="Icon NinjaOne">
-								</a>
-
-								<a href="/" class='w-9 h-auto aspect-square'>
-									<img src="{{ asset('build/icons/kaseya.svg') }}" class="w-full h-full object-contain" alt="Icon Kaseya">
-								</a>
-
-								<a href="/" class='w-9 h-auto aspect-square'>
-									<img src="{{ asset('build/icons/bitdefender.svg') }}" alt="Icon Bitdefender">
-								</a>
-
-								<a href="/admin" class='w-9 h-auto aspect-square'>
-									<img src="{{ asset('build/icons/settings.svg') }}" class="w-full h-full object-contain" alt="Icon Settings">
-								</a>
-							</div>
-
-							<a href="logout" class='w-full h-auto aspect-square bg-primary-white drop-shadow-lg rounded-2xl p-3'>
-								<img src="{{ asset('build/icons/logout.svg') }}" class="w-full h-full object-contain filter invert" alt="Icon Logout">
-							</a>
-						</header>
+						{% include '_partials/header.html.twig' %}
 
 						<main class="h-full w-full bg-primary-white rounded-2xl drop-shadow-lg p-10">
 							<div class="w-full h-auto flex flex-row justify-between items-center">
-								<h1 class="text-2xl font-semibold">Bienvenue {{app.user.lastname}}</h1>
+								<h1 class="text-2xl font-semibold">Bienvenue
+									{{app.user.lastname}}</h1>
 								<div class="flex flex-row gap-4 items-center justify-center">
 									<div class="h-12 w-auto flex flex-row gap-x-2 items-center justify-center text-xl">
 										<p id="clock">
@@ -66,10 +45,20 @@
 											{{ app.user.lastname }}
 										</p>
 									</div>
-
 								</div>
 							</div>
-							{{ block('page_content') }}
+
+							<div class="h-full">
+								<section class="p-6 h-full w-full flex flex-col gap-6">
+
+									<h2 class="text-3xl font-semibold">Dashboard
+										{{title}}
+									</h2>
+
+									{{ block('page_content') }}
+								</section>
+							</div>
+
 						</main>
 					</div>
 				</section>
@@ -78,4 +67,4 @@
 
 		{% block login_content %}{% endblock %}
 	</body>
-</html>
+</html></body></html>
