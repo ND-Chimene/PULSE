@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+
+	<section class="grid grid-cols-3 gap-20 w-full flex-1">
+		<section class="grid grid-row-2 gap-5 h-full">
+			{{ include('dashboard/ninjaOne/tickets.html.twig', ninjaOneData.tickets) }}
+			{{ include('dashboard/ninjaOne/patches.html.twig', ninjaOneData.patches) }}
+		</section>
+
+		<section class="grid grid-row-2 gap-5 h-full">
+			{{ include('dashboard/ninjaOne/alerts.html.twig', ninjaOneData.alerts) }}
+			{{ include('dashboard/ninjaOne/antivirus.html.twig', ninjaOneData.antivirus) }}
+		</section>
+
+		{{ include('dashboard/ninjaOne/deviceHealths.html.twig', ninjaOneData.deviceHealths) }}
+	</section>
+	
+{% endblock %}
