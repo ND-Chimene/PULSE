@@ -5,14 +5,5 @@
 
 {% block page_content %}
 
-	<section class="h-fit p-6 w-full">
-		<h2 class="text-3xl font-semibold mb-10">Dashboard NinjaOne</h2>
-
-		{{ include('dashboard/ninjaOne/tickets.html.twig') }}
-		{{ include('dashboard/ninjaOne/patches.html.twig') }}
-		{{ include('dashboard/ninjaOne/alerts.html.twig') }}
-		{{ include('dashboard/ninjaOne/antivirus.html.twig') }}
-		{{ include('dashboard/ninjaOne/deviceHealths.html.twig') }}
-	</section>
-
+{{ include('dashboard/ninjaOne/index.html.twig', { ninjaOneData: ninjaOneData }) }}
 {% endblock %}
