@@ -1,17 +1,45 @@
 {% block page_content %}
-	<h3>Alertes</h3>
-	{% if statusAlerts is defined and statusAlerts is not empty and alertsCounts is defined and alertsCounts is not empty %}
-		<div class="grid grid-cols-4 gap-4">
-			{% for i in 0..statusAlerts|length - 1 %}
-				<div class="p-4 bg-white rounded-lg shadow">
-					<h3 class="font-bold">{{ statusAlerts[i] }}</h3>
-					<p class="text-2xl">{{ alertsCounts[i] }}</p>
-				</div>
-			{% endfor %}
+	<section class="bg-primary-white rounded-lg p-6 shadow-md flex flex-col items-center justify-start h-full">
+		<section class="flex flex-row items-center gap-5 w-full my-5">
+			<span class="h-9 w-auto p-1.5 flex items-center justify-center bg-secondary-red rounded-lg ">
+				<img src="{{ asset('build/icons/report.svg') }}" class="w-full h-full object-contain" alt="Icon Report">
+			</span>
+			<h3 class="text-2xl">Alertes</h3>
+		</section>
+
+		<div class="flex flex-col items-center justify-center relative h-20">
+			<canvas id="alertsChart" class="mt-40" ></canvas>
+			<p class="absolute text-4xl mt-40 font-semibold"> {{ninjaOneData.allAlerts}} </p>
+
 		</div>
-	{% else %}
-		<div class="p-4 bg-white rounded-lg shadow">
-			<h3 class="font-bold">Aucune alerte disponible</h3>
-		</div>
-	{% endif %}
+
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+            const alertsChart = document.getElementById('alertsChart').getContext('2d');
+
+            const config = {
+                type: 'doughnut',
+                data: {
+                    labels: {{ ninjaOneData.allLabelsJson|raw }},
+                    datasets: [{
+                        label: 'Alertes',
+                        data: {{ ninjaOneData.allAlertsJson|raw }},
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: {
+							position: 'bottom'
+						}
+                    },
+                    cutout: '80%',
+					rotation: -90,
+					circumference: 180,
+                }};
+            new Chart(alertsChart, config);
+            });
+		</script>
+	</section>
 {% endblock %}
