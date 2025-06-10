@@ -14,12 +14,13 @@ class NinjaOneController extends AbstractController
 {
     private NinjaOneApiService $ninjaOneApiService;
 
+    // Importation du service NinjaOneApiService
     public function __construct(NinjaOneApiService $ninjaOneApiService)
     {
         $this->ninjaOneApiService = $ninjaOneApiService;
     }
 
-
+    // Récupération des tickets selon leur état
     private function getTickets(): array
     {
         $tickets = $this->ninjaOneApiService->getTickets();
@@ -45,61 +46,113 @@ class NinjaOneController extends AbstractController
         ];
     }
 
-    private function getPatches(): array
+    // Récupération des patches échoués et des logiciels rejetés
+    private function getPatchesFailed(): array
     {
-        $patches = $this->ninjaOneApiService->getPatches()["results"];
-        $statusPatches = [];
-        $patchesCounts = [];
+        $patchesFailed = $this->ninjaOneApiService->getPatchesFailed()["results"];
+        $statusPatchesFailed = [];
+        $patchesFailedCounts = [];
 
-        foreach ($patches as $patch) {
+        foreach ($patchesFailed as $patch) {
             if (isset($patch['status'])) {
-                $status = $patch['status'];
-                $statusPatches[] = $status;
+                $statusPatchesFailed[] = 'OS PATCH';
             }
         }
 
-        if (!empty($statusPatches)) {
-            $counts = array_count_values($statusPatches);
-            $statusPatches = array_keys($counts);
-            $patchesCounts = array_values($counts);
+        if (!empty($statusPatchesFailed)) {
+            $counts = array_count_values($statusPatchesFailed);
+            $statusPatchesFailed = array_keys($counts);
+            $patchesFailedCounts = array_values($counts);
         }
 
-        $unpatchesCounts = $patchesCounts[0];
-
         return [
-            'statusPatches' => $statusPatches,
-            'patchesCounts' => $patchesCounts,
-            'statusPatchesJson' => json_encode($statusPatches),
-            'patchesCountsJson' => json_encode($patchesCounts),
-            'unpatchesCounts' => $unpatchesCounts,
+            'statusPatchesFailed' => $statusPatchesFailed,
+            'patchesFailedCounts' => $patchesFailedCounts,
         ];
     }
 
+    private function getSoftwaresRejected(): array
+    {
+        $softwaresRejected = $this->ninjaOneApiService->getSoftwaresRejected()["results"];
+        $statusSoftwaresRejected = [];
+        $softwaresRejectedCounts = [];
+
+        foreach ($softwaresRejected as $software) {
+            if (isset($software['status'])) {
+                $statusSoftwaresRejected[] = 'SOFTWARE';
+            }
+        }
+
+        if (!empty($statusSoftwaresRejected)) {
+            $counts = array_count_values($statusSoftwaresRejected);
+            $statusSoftwaresRejected = array_keys($counts);
+            $softwaresRejectedCounts = array_values($counts);
+        }
+
+        return [
+            'statusSoftwaresRejected' => $statusSoftwaresRejected,
+            'softwaresRejectedCounts' => $softwaresRejectedCounts,
+        ];
+    }
+
+    // Récupération des alertes, systèmes d'exploitation, antivirus et états de santé des appareils
     private function getAlerts(): array
     {
         $alerts = $this->ninjaOneApiService->getAlerts();
         $statusAlerts = [];
         $alertsCounts = [];
+
+        $statusLabels = [
+            "POSTES NON PATCHÉS (30j+)",
+            "ESPACE DISQUE INSUFFISANT",
+        ];
+
         foreach ($alerts as $alert) {
             if (isset($alert['sourceType'])) {
                 $source = $alert['sourceType'];
                 $statusAlerts[] = $source;
             }
         }
+
         if (!empty($statusAlerts)) {
             $counts = array_count_values($statusAlerts);
             $statusAlerts = array_keys($counts);
             $alertsCounts = array_values($counts);
+
+            foreach ($statusAlerts as $i => $label) {
+                if (isset($statusLabels[$label])) {
+                    $statusAlerts[$i] = $statusLabels[$label];
+                }
+            }
         }
 
-        $sallAlerts = array_sum($alertsCounts);
+        return [
+            'alertsCounts' => $alertsCounts,
+            'statusLabel' => $statusLabels,
+        ];
+    }
+
+    private function getOperatingSystems(): array
+    {
+        $operatingSystems = $this->ninjaOneApiService->getOperatingSystems()["results"];
+        $statusOS = [];
+        $OSCounts = [];
+        foreach ($operatingSystems as $os) {
+            if (isset($os['needsReboot']) && $os['needsReboot'] === true) {
+                $statusOS[] = "RÉDEMARRAGE NÉCESSAIRE";
+
+            }
+        }
+
+        if (!empty($statusOS)) {
+            $counts = array_count_values($statusOS);
+            $statusOS = array_keys($counts);
+            $OSCounts = array_values($counts);
+        }
 
         return [
-            'statusAlerts' => $statusAlerts,
-            'alertsCounts' => $alertsCounts,
-            'statusAlertsJson' => json_encode($statusAlerts),
-            'alertsCountsJson' => json_encode($alertsCounts),
-            'allAlerts' => $sallAlerts,
+            'statusOS' => $statusOS,
+            'OSCounts' => $OSCounts,
         ];
     }
 
@@ -148,17 +201,27 @@ class NinjaOneController extends AbstractController
         ];
     }
 
+    // Récupération de toutes les données pour le tableau de bord
     public function getAllData(): array
     {
         return [
             'tickets' => $this->getTickets(),
-            'patches' => $this->getPatches(),
+            'allPatches' => array_sum($this->getPatchesFailed()['patchesFailedCounts']) + array_sum($this->getSoftwaresRejected()['softwaresRejectedCounts']),
+            'allPatchesJson' => json_encode(array_merge($this->getPatchesFailed()['statusPatchesFailed'], $this->getSoftwaresRejected()['statusSoftwaresRejected'])),
+            'allPatchesCountsJson' => json_encode(array_merge($this->getPatchesFailed()['patchesFailedCounts'], $this->getSoftwaresRejected()['softwaresRejectedCounts'])),
+            'patchesFailed' => $this->getPatchesFailed(),
+            'softwaresRejected' => $this->getSoftwaresRejected(),
+            'operatingSystems' => $this->getOperatingSystems(),
             'alerts' => $this->getAlerts(),
+            'allAlerts' => array_sum($this->getAlerts()['alertsCounts']) + array_sum($this->getOperatingSystems()['OSCounts']),
+            'allAlertsJson' => json_encode(array_merge($this->getAlerts()['alertsCounts'], $this->getOperatingSystems()['OSCounts'])),
+            'allLabelsJson' => json_encode(array_merge($this->getAlerts()['statusLabel'], $this->getOperatingSystems()['statusOS'])),
             'antivirus' => $this->getAntivirus(),
             'deviceHealths' => $this->getDeviceHealths(),
         ];
     }
 
+    // Route pour afficher le tableau de bord NinjaOne
     #[Route('/dashboard/ninjaOne', name: 'app_dashboard_ninjaOne', methods: ['GET'])]
     public function index(): Response
     {
