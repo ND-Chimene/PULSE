@@ -93,7 +93,7 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
-        public function getPatches(): array
+    public function getPatches(): array
     {
         if (!$this->hasValidTokens()) {
             $this->authenticate();
@@ -111,7 +111,44 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
-        public function getAlerts(): array
+    public function getPatchesFailed(): array
+    {
+        if (!$this->hasValidTokens()) {
+            $this->authenticate();
+        }
+
+        $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/queries/os-patch-installs?status=FAILED", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        return $response->toArray();
+    }
+
+        public function getSoftwaresRejected(): array
+    {
+        if (!$this->hasValidTokens()) {
+            $this->authenticate();
+        }
+
+        $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/queries/software-patches?status=REJECTED", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        return $response->toArray();
+    }
+
+
+    public function getAlerts(): array
     {
         if (!$this->hasValidTokens()) {
             $this->authenticate();
@@ -129,7 +166,25 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
-        public function getAntivirus(): array
+        public function getOperatingSystems(): array
+    {
+        if (!$this->hasValidTokens()) {
+            $this->authenticate();
+        }
+
+        $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/queries/operating-systems", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        return $response->toArray();
+    }
+
+    public function getAntivirus(): array
     {
         if (!$this->hasValidTokens()) {
             $this->authenticate();
@@ -146,7 +201,7 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
-        public function getDeviceHealths(): array
+    public function getDeviceHealths(): array
     {
         if (!$this->hasValidTokens()) {
             $this->authenticate();
