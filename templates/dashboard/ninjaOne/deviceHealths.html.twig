@@ -1,17 +1,69 @@
+{% set statusColors = {
+	'HEALTHY' : '#4BC0A0',
+	'UNKNOWN' : '#B1BDBE',
+	'NEEDS_ATTENTION' : '#FFCE56',
+	'UNHEALTHY' : '#FF6384'
+} %}
+
 {% block page_content %}
-<h3>Santé des appareils</h3>
-    {% if statusHealth is defined and statusHealth is not empty and healthCounts is defined and healthCounts is not empty %}
-        <div class="grid grid-cols-4 gap-4">
-            {% for i in 0..statusHealth|length - 1 %}
-                <div class="p-4 bg-white rounded-lg shadow">
-                    <h3 class="font-bold">{{ statusHealth[i] }}</h3>
-                    <p class="text-2xl">{{ healthCounts[i] }}</p>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="p-4 bg-white rounded-lg shadow">
-            <h3 class="font-bold">Aucun appareil disponible</h3>
-        </div>
-    {% endif %}
+	<section class="bg-primary-white rounded-lg p-4 shadow-md flex flex-col items-center justify-around">
+		<section class="flex flex-row justify-center items-center gap-5 my-10">
+			<span class="h-9 w-auto p-1.5 flex items-center justify-center bg-secondary-red rounded-lg">
+				<img src="{{ asset('build/icons/devices.svg') }}" class="w-full h-full object-contain" alt="Icon Devices">
+			</span>
+			<h3 class="text-2xl">Santé des appareils</h3>
+		</section>
+
+		<div class="flex flex-col items-center justify-center ">
+            <canvas id="devicesChart"></canvas>
+
+			<table class="w-full mt-10">
+				<thead class="border-b border-tertiary-white">
+					<tr>
+						<th class="p-2"></th>
+						<th class="p-2 text-left">État</th>
+						<th class="p-2 text-right">Nombre d'appareils</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for status in statusHealth %}
+						<tr class="text-center">
+							<td class="p-2">
+								<div class="w-6 h-6 rounded-full mx-auto" style="background-color: {{ statusColors[status] }}"></div>
+							</td>
+							<td class="p-2 text-left">{{ status }}</td>
+							<td class="p-2 text-right">{{ healthCounts[loop.index0] }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+            const devicesChart = document.getElementById('devicesChart').getContext('2d');
+			const colors = {{ statusHealth|map(status => statusColors[status])|json_encode|raw }};
+
+            const config = {
+                type: 'doughnut',
+                data: {
+                    labels: {{ statusHealthJson|raw }},
+                    datasets: [{
+                        label: 'Santé des appareils',
+                        data: {{ healthCountsJson|raw }},
+                        backgroundColor: colors,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: {display: false}
+                    },
+                    cutout: '70%'
+                }};
+            new Chart(devicesChart, config);
+            });
+		</script>
+	</section>
 {% endblock %}
