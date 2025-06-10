@@ -18,6 +18,7 @@ class DashboardController extends AbstractController
         $this->ninjaOneController = $ninjaOneController;
     }
 
+    // Redirection vers le tableau de bord de NinjaOne par défaut
     #[Route('/dashboard', name: 'app_dashboard', methods: ['GET'])]
     public function dashboard(): Response
     {
