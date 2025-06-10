@@ -41,6 +41,7 @@ class NinjaOneApiService
         return $this->requestStack->getSession();
     }
 
+    // Authentification avec l'API NinjaOne
     public function authenticate(): void
     {
         $response = $this->httpClient->request('POST', "{$this->ninjaOneApiUrl}/ws/oauth/token", [
@@ -69,12 +70,14 @@ class NinjaOneApiService
         $this->getSession()->set('ninja_token_expiry', time() + 3600);
     }
 
+    // Vérification de la validité des tokens
     public function hasValidTokens(): bool
     {
         $expiry = $this->getSession()->get('ninja_token_expiry');
         return $expiry !== null && $expiry > time();
     }
 
+    // Récuperation des tickets
     public function getTickets(): array
     {
         if (!$this->hasValidTokens()) {
@@ -93,24 +96,8 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
-    public function getPatches(): array
-    {
-        if (!$this->hasValidTokens()) {
-            $this->authenticate();
-        }
 
-        $this->accessToken = $this->getSession()->get('ninja_access_token');
-
-        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/queries/os-patches", [
-            'headers' => [
-                'Authorization' => "Bearer {$this->accessToken}",
-                'Content-Type' => 'application/json',
-            ],
-        ]);
-
-        return $response->toArray();
-    }
-
+    // Récuperation des Patches Échoués
     public function getPatchesFailed(): array
     {
         if (!$this->hasValidTokens()) {
@@ -129,7 +116,9 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
-        public function getSoftwaresRejected(): array
+
+    // Récuperation des Logiciels Rejetés
+    public function getSoftwaresRejected(): array
     {
         if (!$this->hasValidTokens()) {
             $this->authenticate();
@@ -148,6 +137,7 @@ class NinjaOneApiService
     }
 
 
+    // Récuperation des Alertes Installés
     public function getAlerts(): array
     {
         if (!$this->hasValidTokens()) {
@@ -166,7 +156,8 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
-        public function getOperatingSystems(): array
+    // Récuperation des Systèmes d'Exploitation
+    public function getOperatingSystems(): array
     {
         if (!$this->hasValidTokens()) {
             $this->authenticate();
@@ -184,6 +175,7 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
+    // Récuperation des Antivirus
     public function getAntivirus(): array
     {
         if (!$this->hasValidTokens()) {
@@ -201,6 +193,7 @@ class NinjaOneApiService
         return $response->toArray();
     }
 
+    // Récuperation des état de santé des appareils
     public function getDeviceHealths(): array
     {
         if (!$this->hasValidTokens()) {
