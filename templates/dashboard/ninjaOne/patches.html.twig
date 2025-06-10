@@ -1,17 +1,63 @@
 {% block page_content %}
-<h3>OS Patch</h3>
-    {% if statusPatches is defined and statusPatches is not empty and patchesCounts is defined and patchesCounts is not empty %}
-        <div class="grid grid-cols-4 gap-4">
-            {% for i in 0..statusPatches|length - 1 %}
-                <div class="p-4 bg-white rounded-lg shadow">
-                    <h3 class="font-bold">{{ statusPatches[i] }}</h3>
-                    <p class="text-2xl">{{ patchesCounts[i] }}</p>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="p-4 bg-white rounded-lg shadow">
-            <h3 class="font-bold">Aucun patch disponible</h3>
-        </div>
-    {% endif %}
+	<section class="bg-primary-white rounded-lg p-6 shadow-md flex flex-col items-center h-full">
+		<section class="flex flex-row items-center gap-5 w-full my-5">
+			<span class="h-9 w-auto p-1.5 flex items-center justify-center bg-secondary-red rounded-lg ">
+				<img src="{{ asset('build/icons/report.svg') }}" class="w-full h-full object-contain" alt="Icon Report">
+			</span>
+			<h3 class="text-2xl">Rapport Patch</h3>
+		</section>
+
+		<section class="flex flex-col items-center justify-center w-full h-full gap-y-5">
+			<div class="flex flex-row items-center justify-center gap-2">
+				<span class="text-4xl font-semibold">
+					{{ allPatches }}
+				</span>
+				<p class="text-lg">
+					Rapport OS/Software
+				</p>
+			</div>
+			<div class="h-full flex flex-col items-center justify-around">
+				<canvas id="patchesChart" class="w-full h-full"></canvas>
+			</div>
+		</section>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+			const patchesChart = document.getElementById('patchesChart').getContext('2d');
+
+			const config = {
+				type: 'bar',
+				data: {
+					labels: {{ allPatchesJson|raw }},
+					datasets: [{
+						label: 'Rapport OS/Software',
+						data: {{ allPatchesCountsJson|raw }},
+						borderRadius: {
+							topLeft: 5,
+							topRight: 5,
+							bottomLeft: 0,
+							bottomRight: 0
+						},
+						borderSkipped: 'bottom'
+					}]
+				},
+				options: {
+					responsive: false,
+					plugins: {
+						legend: { display: false }
+					},
+					scales: {
+						x: {
+							grid: {display: false}
+						},
+						y: {
+							grid: {display: false}
+						}
+					},
+				}
+			};
+			new Chart(patchesChart, config);
+			});
+		</script>
+	</section>
 {% endblock %}
