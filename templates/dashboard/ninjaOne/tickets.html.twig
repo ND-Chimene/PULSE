@@ -34,7 +34,7 @@
 					type: 'pie',
 					data: { labels: {{ statusTicketsJson|raw }},
 					datasets: [{
-						label: 'Santé des appareils',
+						label: 'État des tickets',
 						data: {{ ticketCountsJson|raw }},
 						backgroundColor: {{ colors|json_encode|raw }},
 						hoverOffset: 4
