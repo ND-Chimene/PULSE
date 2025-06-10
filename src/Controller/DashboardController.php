@@ -11,12 +11,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractController
 {
-    private NinjaOneApiService $ninjaOneApiService;
     private NinjaOneController $ninjaOneController;
 
-    public function __construct(NinjaOneApiService $ninjaOneApiService, NinjaOneController $ninjaOneController)
+    public function __construct(NinjaOneController $ninjaOneController)
     {
-        $this->ninjaOneApiService = $ninjaOneApiService;
         $this->ninjaOneController = $ninjaOneController;
     }
 
