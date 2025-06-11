@@ -1,5 +1,6 @@
+{% set colors = ['#6BAED6 ', '#F4A582 ', '#66C2A5'] %}
 {% block page_content %}
-	<section class="bg-primary-white rounded-lg p-6 shadow-md flex flex-col items-center justify-start h-full">
+	<section class="bg-primary-white rounded-lg p-6 shadow-md flex flex-col items-center justify-start">
 		<section class="flex flex-row items-center gap-5 w-full my-5">
 			<span class="h-9 w-auto p-1.5 flex items-center justify-center bg-secondary-red rounded-lg ">
 				<img src="{{ asset('build/icons/report.svg') }}" class="w-full h-full object-contain" alt="Icon Report">
@@ -7,10 +8,19 @@
 			<h3 class="text-2xl">Alertes</h3>
 		</section>
 
-		<div class="flex flex-col items-center justify-center relative h-20">
-			<canvas id="alertsChart" class="mt-40" ></canvas>
-			<p class="absolute text-4xl mt-40 font-semibold"> {{allAlerts}} </p>
+		<div class="flex flex-col items-center justify-center">
+			<canvas id="alertsChart" class="h-32" ></canvas>
+			<p class="absolute text-4xl font-semibold"> {{allAlerts}}</p>
+            <div class="-mt-5 flex flex-row items-center justify-center flex-wrap w-full px-5">
+                {% for label in allLabelsAlerts %}
+                    <div class="flex items-center justify-start gap-2 mb-3">
+                        <span class="h-4 aspect-square rounded-full" style="background-color: {{ colors[loop.index0 % colors|length] }};"></span>
+                        <p>{{ label }}</p>
+                    </div>
+                {% endfor %}
+            </div>
 		</div>
+
 
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
@@ -19,10 +29,10 @@
             const config = {
                 type: 'doughnut',
                 data: {
-                    labels: {{ allLabelsJson|raw }},
                     datasets: [{
                         label: 'Alertes',
                         data: {{ allAlertsJson|raw }},
+                        backgroundColor: {{ colors|json_encode|raw }},
                         hoverOffset: 4
                     }]
                 },
