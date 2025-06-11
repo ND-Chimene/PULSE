@@ -15,5 +15,4 @@ import './images/icon.webp';
 import './icons/login.svg';
 
 // JS
-import './js/update.js';
-
+import './js/updateClock.js';
