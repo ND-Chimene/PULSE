@@ -86,7 +86,7 @@ class NinjaOneApiService
 
         $this->accessToken = $this->getSession()->get('ninja_access_token');
 
-        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/ticketing/trigger/boards", [
+        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/ticketing/statuses", [
             'headers' => [
                 'Authorization' => "Bearer {$this->accessToken}",
                 'Content-Type' => 'application/json',
