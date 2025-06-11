@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Service\NinjaOneApiService;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 
 #[IsGranted('ROLE_ADMIN')]
 
@@ -27,15 +28,21 @@ class NinjaOneController extends AbstractController
 
         $statusTickets = [];
         $ticketCounts = [];
-        $titleStatusTickets = ['Tickets non attribués', 'Tickets ouverts', 'Tickets Non Résolus'];
+        $ticketStatues = ["Nouveau", "Ouvert", "Paused", "Fermé", "En attente"];
 
         foreach ($tickets as $ticket) {
-            if (isset($ticket['name']) && in_array($ticket['name'], $titleStatusTickets)) {
-                $statusTickets[] = $ticket['name'];
-                $ticketCounts[] = (int)($ticket['ticketCount'] ?? 0);
+            if (isset($ticket['displayName']) && in_array($ticket['displayName'], $ticketStatues)) {
+                $statusTickets[] = $ticket['displayName'];
             }
         }
-        $openTicketCounts = array_sum(array_slice($ticketCounts, 1, 3));
+
+        if (!empty($statusTickets)) {
+            $counts = array_count_values($statusTickets);
+            $statusTickets = array_keys($counts);
+            $ticketCounts = array_values($counts);
+        }
+
+        $openTicketCounts = array_sum($ticketCounts);
 
         return [
             'statusTickets' => $statusTickets,
@@ -55,7 +62,7 @@ class NinjaOneController extends AbstractController
 
         foreach ($patchesFailed as $patch) {
             if (isset($patch['status'])) {
-                $statusPatchesFailed[] = 'OS PATCH';
+                $statusPatchesFailed[] = 'OS PATCH FAILED';
             }
         }
 
@@ -79,7 +86,7 @@ class NinjaOneController extends AbstractController
 
         foreach ($softwaresRejected as $software) {
             if (isset($software['status'])) {
-                $statusSoftwaresRejected[] = 'SOFTWARE';
+                $statusSoftwaresRejected[] = 'SOFTWARE REJECTED';
             }
         }
 
@@ -140,7 +147,6 @@ class NinjaOneController extends AbstractController
         foreach ($operatingSystems as $os) {
             if (isset($os['needsReboot']) && $os['needsReboot'] === true) {
                 $statusOS[] = "RÉDEMARRAGE NÉCESSAIRE";
-
             }
         }
 
@@ -214,8 +220,9 @@ class NinjaOneController extends AbstractController
             'operatingSystems' => $this->getOperatingSystems(),
             'alerts' => $this->getAlerts(),
             'allAlerts' => array_sum($this->getAlerts()['alertsCounts']) + array_sum($this->getOperatingSystems()['OSCounts']),
+            'allLabelsAlerts' => array_merge($this->getAlerts()['statusLabel'], $this->getOperatingSystems()['statusOS']),
             'allAlertsJson' => json_encode(array_merge($this->getAlerts()['alertsCounts'], $this->getOperatingSystems()['OSCounts'])),
-            'allLabelsJson' => json_encode(array_merge($this->getAlerts()['statusLabel'], $this->getOperatingSystems()['statusOS'])),
+            'allLabelsAlertsJson' => json_encode(array_merge($this->getAlerts()['statusLabel'], $this->getOperatingSystems()['statusOS'])),
             'antivirus' => $this->getAntivirus(),
             'deviceHealths' => $this->getDeviceHealths(),
         ];
