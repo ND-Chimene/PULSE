@@ -2,12 +2,20 @@
 
 namespace App\Service;
 
+use App\Entity\History;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\RequestStack;
 use DeviceDetector\DeviceDetector;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Dom\Entity;
 
+/**
+ * Class LoginNotificationService
+ * Ce service est responsable de l'envoi des notifications de connexion aux utilisateurs.
+ * Il enregistre les détails de connexion et envoie un e-mail de notification lors d'une connexion réussie.
+ */
 class LoginNotificationService
 {
     public function __construct(
@@ -15,7 +23,7 @@ class LoginNotificationService
         private RequestStack $requestStack
     ) {}
 
-    public function sendLoginNotification(User $user): void
+    public function sendLoginNotification(User $user, EntityManagerInterface $em): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $deviceDetector = new DeviceDetector($request->headers->get('User-Agent'));
@@ -26,6 +34,16 @@ class LoginNotificationService
         $os = $deviceDetector->getOs('name');
         $browser = $deviceDetector->getClient('name');
         $date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+
+        $history = new History();
+        $history->setUser($user);
+        $history->setIpAddress($ipAddress);
+        $history->setDevice($device);
+        $history->setOs($os);
+        $history->setBrowser($browser);
+        $history->setLoginDate($date);
+        $em->persist($history);
+        $em->flush();
 
         $email = (new TemplatedEmail())
             ->from('noreply@pulse.fr')
