@@ -68,6 +68,7 @@ class UserForm extends AbstractType
             ->add('password', PasswordType::class, [
                 'mapped' => false,
                 'label' => 'Mot de passe',
+                'required' => true,
                 'attr' => [
                     'class' => 'text-primary-black rounded-lg px-5 py-2',
                     'placeholder' => 'Mot de passe'
