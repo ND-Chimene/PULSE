@@ -9,8 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[IsGranted('ROLE_ADMIN')]
-
+#[IsGranted('ROLE_IT')]
 class NinjaOneController extends AbstractController
 {
     private NinjaOneApiService $ninjaOneApiService;
@@ -36,7 +35,7 @@ class NinjaOneController extends AbstractController
                 $ticketCounts[] = (int)($ticket['ticketCount'] ?? 0);
             }
         }
-        
+
         $openTicketCounts = array_sum(array_slice($ticketCounts, 1, 3));
 
         return [
