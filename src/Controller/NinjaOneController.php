@@ -28,21 +28,16 @@ class NinjaOneController extends AbstractController
 
         $statusTickets = [];
         $ticketCounts = [];
-        $ticketStatues = ["Nouveau", "Ouvert", "Paused", "Fermé", "En attente"];
+        $titleStatusTickets = ['Tickets non attribués', 'Tickets ouverts', 'Tickets Non Résolus'];
 
         foreach ($tickets as $ticket) {
-            if (isset($ticket['displayName']) && in_array($ticket['displayName'], $ticketStatues)) {
-                $statusTickets[] = $ticket['displayName'];
+            if (isset($ticket['name']) && in_array($ticket['name'], $titleStatusTickets)) {
+                $statusTickets[] = $ticket['name'];
+                $ticketCounts[] = (int)($ticket['ticketCount'] ?? 0);
             }
         }
-
-        if (!empty($statusTickets)) {
-            $counts = array_count_values($statusTickets);
-            $statusTickets = array_keys($counts);
-            $ticketCounts = array_values($counts);
-        }
-
-        $openTicketCounts = array_sum($ticketCounts);
+        
+        $openTicketCounts = array_sum(array_slice($ticketCounts, 1, 3));
 
         return [
             'statusTickets' => $statusTickets,
