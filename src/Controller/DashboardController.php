@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_IT')]
 class DashboardController extends AbstractController
 {
     private NinjaOneController $ninjaOneController;
@@ -18,19 +18,18 @@ class DashboardController extends AbstractController
         $this->ninjaOneController = $ninjaOneController;
     }
 
-    // Redirection vers le tableau de bord de NinjaOne par défaut
     #[Route('/dashboard', name: 'app_dashboard', methods: ['GET'])]
     public function dashboard(): Response
     {
-
+        // Redirection vers le tableau de bord de NinjaOne par défaut
         return $this->redirectToRoute('app_dashboard_ninjaOne');
     }
 
+    // Affichage du tableau de bord NinjaOne avec les données récupérées
     #[Route('/dashboard/ninjaOne', name: 'app_dashboard_ninjaOne', methods: ['GET'])]
     public function index(): Response
     {
         $ninjaOneData = $this->ninjaOneController->getAllData();
-
         return $this->render('dashboard/ninjaOne/index.html.twig', [
             'ninjaOneData' => $ninjaOneData,
         ]);
