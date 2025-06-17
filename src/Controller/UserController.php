@@ -11,13 +11,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[IsGranted('ROLE_ADMIN')]
+//Page de gestion du profil utilisateur
+#[IsGranted('ROLE_IT')]
 final class UserController extends AbstractController
 {
-
     public function __construct(private EntityManagerInterface $em) {}
-
-    #[Route('/admin', name: 'app_admin', methods: ['GET', 'POST'])]
+    #[Route('/settings', name: 'app_profile', methods: ['GET', 'POST'])]
     public function index(Request $request, UserPasswordHasherInterface $ph): Response
     {
         $user = $this->getUser();
@@ -25,20 +24,21 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
-            $plainPassword = $form->get('password')->getData();
-
-            if ($plainPassword) {
-                $user->setPassword($ph->hashPassword($user, $plainPassword));
+            // Comparaison du mot de passe
+            if ($ph->isPasswordValid($user, $form->get('password')->getData())) {
+                $this->em->flush();
+                $this->addFlash('success', 'Votre profil a été mis à jour.');
+                return $this->redirectToRoute('app_profile');
+            } else {
+                // Mot de passe incorrect : on remet les valeurs initiales
+                $this->em->refresh($user); // Recharger l’entité depuis la BDD
+                $this->addFlash('error', 'Le mot de passe est incorrect. Aucune modification effectuée.');
             }
-            $this->em->flush();
-
-            return $this->redirectToRoute('app_admin');
         }
 
         return $this->render('user/index.html.twig', [
-            "form" => $form,
-            "title" => "Administrateur",
+            'form' => $form,
+            "title" => "Utilisateur",
         ]);
     }
 }
