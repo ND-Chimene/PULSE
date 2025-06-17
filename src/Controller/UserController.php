@@ -26,8 +26,11 @@ final class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-            $user->setPassword($ph->hashPassword($user, $form->get('password')->getData()));
-            $this->em->persist($user);
+            $plainPassword = $form->get('password')->getData();
+
+            if ($plainPassword) {
+                $user->setPassword($ph->hashPassword($user, $plainPassword));
+            }
             $this->em->flush();
 
             return $this->redirectToRoute('app_admin');
