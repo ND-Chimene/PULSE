@@ -9,8 +9,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * Class NinjaOneApiService
  * @package App\Service
  *
- * This class is responsible for interacting with the NinjaOne API.
- * It handles authentication and provides methods to retrieve organizations.
+ * Cette classe est responsable de l'interaction avec l'API NinjaOne.
+ * Elle gère l'authentification et fournit des méthodes pour récupérer les organisations.
  */
 
 class NinjaOneApiService
