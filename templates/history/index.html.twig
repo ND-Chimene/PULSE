@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suivi des connexions - PULSE
+{% endblock %}
+
+{% block page_content %}
+	<section class="w-full h-full overflow-y-scroll">
+		<table class="w-full border border-secondary-white rounded-md">
+			<thead class="bg-secondary-white">
+				<tr>
+					<th class="px-4 py-2">Date</th>
+					<th class="px-4 py-2">Adresse IP</th>
+					<th class="px-4 py-2">Appareil</th>
+					<th class="px-4 py-2">OS</th>
+					<th class="px-4 py-2">Navigateur</th>
+					<th class="px-4 py-2">Utilisateur</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in history %}
+					<tr class="border-t">
+						<td class="px-4 py-2">{{ item.loginDate }}</td>
+						<td class="px-4 py-2">{{ item.ipAddress }}</td>
+						<td class="px-4 py-2">{{ item.device }}</td>
+						<td class="px-4 py-2">{{ item.os }}</td>
+						<td class="px-4 py-2">{{ item.browser }}</td>
+						<td class="px-4 py-2">{{ item.userId }}</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="6" class="text-center py-4 text-gray-500">Aucune connexion enregistrée.</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</section>
+{% endblock %}
