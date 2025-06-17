@@ -10,6 +10,14 @@
 			<p class="mb-8">Vous pouvez modifier vos informations de compte ici.</p>
 		</div>
 
+		{% for label, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="flash-{{ label }} p-4 rounded mb-4 text-xl">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+
 		<section class="flex flex-col items-center justify-between w-full h-auto bg-secondary-white rounded-lg p-10">
 			{{ form_start(form, {'attr': {'class': 'flex flex-col items-center gap-y-20 w-full'}}) }}
 
@@ -38,7 +46,7 @@
 			</section>
 
 			{{ form_widget(form.submit) }}
-			{{ form_end(form, {'render_rest': false}) }}
+			{{ form_end(form) }}
 		</section>
 	</section>
 {% endblock %}
