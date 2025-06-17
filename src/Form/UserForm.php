@@ -68,6 +68,7 @@ class UserForm extends AbstractType
             ->add('password', PasswordType::class, [
                 'mapped' => false,
                 'label' => 'Mot de passe',
+                'required' => true,
                 'attr' => [
                     'class' => 'text-primary-black rounded-lg px-5 py-2',
                     'placeholder' => 'Mot de passe'
@@ -78,7 +79,7 @@ class UserForm extends AbstractType
                     ]),
                     new Length([
                         'min' => 12,
-                        'max' => 4096,
+                        'max' => 80,
                         'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
                     ])
                 ]
