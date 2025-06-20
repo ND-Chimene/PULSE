@@ -63,7 +63,7 @@ services:
     networks:
       - pulse_network
 
-  messenger_worker:
+  messenger_worker_pulse:
     container_name: pulse_messenger_worker
     build: ./docker/php
     depends_on:
