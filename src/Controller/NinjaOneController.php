@@ -23,20 +23,28 @@ class NinjaOneController extends AbstractController
     // Récupération des tickets selon leur état
     private function getTickets(): array
     {
-        $tickets = $this->ninjaOneApiService->getTickets();
+        $tickets = $this->ninjaOneApiService->getTickets()["data"];
 
         $statusTickets = [];
         $ticketCounts = [];
-        $titleStatusTickets = ['Tickets non attribués', 'Tickets ouverts', 'Tickets Non Résolus'];
 
         foreach ($tickets as $ticket) {
-            if (isset($ticket['name']) && in_array($ticket['name'], $titleStatusTickets)) {
-                $statusTickets[] = $ticket['name'];
-                $ticketCounts[] = (int)($ticket['ticketCount'] ?? 0);
+            if (isset($ticket['status']['displayName'])) {
+                $statusTickets[] = $ticket['status']['displayName'];
             }
         }
 
-        $openTicketCounts = array_sum(array_slice($ticketCounts, 1, 3));
+
+        if (!empty($statusTickets)) {
+            $counts = array_count_values($statusTickets);
+            $statusTickets = array_keys($counts);
+            $ticketCounts = array_values($counts);
+        }
+        $statusTickets = array_slice($statusTickets, 1, 4);
+        $ticketCounts = array_slice($ticketCounts, 1, 4);
+        $openTicketCounts = array_sum($ticketCounts);
+
+
 
         return [
             'statusTickets' => $statusTickets,
