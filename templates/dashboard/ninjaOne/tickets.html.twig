@@ -1,4 +1,10 @@
-{% set colors = ['#B1BDBE', '#4BC0A0', '#FFCE56'] %}
+{% set statusColors = {
+	'Paused' : '#949597',
+	'En attente' : '#337ab7',
+	'Ouvert' : '#fac905',
+	'Nouveau' : '#d53948'
+} %}
+
 {% block page_content %}
 	<section class="bg-primary-white rounded-lg p-6 shadow-md flex flex-col items-center h-full">
 		<section class="flex flex-row items-center gap-5 w-full my-5">
@@ -8,27 +14,42 @@
 			<h3 class="text-2xl">État des tickets</h3>
 		</section>
 
-		<section class="flex flex-row items-center justify-center w-full h-full gap-x-5">
-			<div class="w-1/2 h-full flex flex-col items-center justify-center gap-10">
-				<p class="text-lg">Tickets Ouverts</p>
-				<p class="text-6xl font-semibold"> {{openTicketCounts}} </p>
-			</div>
-			<div class="w-1/2 h-full flex flex-col items-center justify-center">
-				<canvas id="ticketsChart" class="h-20 mb-10"></canvas>
-				<div>
-				{% for status in statusTickets %}
-					<div class="flex items-center justify-start gap-2">
-						<span class="w-4 h-4 rounded-full" style="background-color: {{ colors[loop.index0 % colors|length] }};"></span>
-						<p>{{ status }}</p>
-					</div>
-				{% endfor %}
+		<section class="flex flex-col items-center justify-center w-full h-full gap-x-5">
+			<div class="w-full h-full flex flex-row items-center justify-center">
+				<div class="w-1/2 h-full flex flex-col items-center justify-center gap-8">
+					<p class="text-lg">Tickets Ouverts</p>
+					<p class="text-4xl font-semibold"> {{openTicketCounts}} </p>
 				</div>
+				<canvas id="ticketsChart" class="h-20"></canvas>
 			</div>
+
+			<table class="w-full mt-5">
+				<thead class="border-b border-tertiary-white">
+					<tr>
+						<th class="p-2"></th>
+						<th class="p-2 text-left">État</th>
+						<th class="p-2 text-right">Nombre</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for status in statusTickets %}
+						<tr class="text-center">
+							<td>
+								<div class="w-6 h-6 rounded-full mx-auto" style="background-color: {{ statusColors[status] }}"></div>
+							</td>
+							<td class="p-2 text-left">{{ status }}</td>
+							<td class="p-2 text-right">{{ ticketCounts[loop.index0] }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 		</section>
 
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
 				const ticketsChart = document.getElementById('ticketsChart').getContext('2d');
+				const colors = {{ statusTickets|map(status => statusColors[status])|json_encode|raw }};
+
 
 				const config = {
 					type: 'pie',
@@ -36,13 +57,13 @@
 					datasets: [{
 						label: 'État des tickets',
 						data: {{ ticketCountsJson|raw }},
-						backgroundColor: {{ colors|json_encode|raw }},
+						backgroundColor: colors,
 						hoverOffset: 4
 						}]
 					},
 					options: {
-					responsive: false,
-					plugins: { legend: { display: false } }
+						responsive: false,
+						plugins: { legend: { display: false } }
 					}
 				};
 				new Chart(ticketsChart, config);
