@@ -11,9 +11,9 @@
 		<div class="flex flex-col items-center justify-center">
 			<canvas id="alertsChart" class="h-32" ></canvas>
 			<p class="absolute text-4xl font-semibold"> {{allAlerts}}</p>
-            <div class="-mt-5 flex flex-row items-center justify-center flex-wrap w-full px-5">
+            <div class="-mt-5 flex flex-row items-center justify-center flex-wrap w-full px-5 gap-4">
                 {% for label in allLabelsAlerts %}
-                    <div class="flex items-center justify-start gap-2 mb-3">
+                    <div class="flex items-center justify-start gap-2">
                         <span class="h-4 aspect-square rounded-full" style="background-color: {{ colors[loop.index0 % colors|length] }};"></span>
                         <p>{{ label }}</p>
                     </div>
@@ -28,21 +28,17 @@
 
             const config = {
                 type: 'doughnut',
-                data: {
-                    datasets: [{
-                        label: 'Alertes',
-                        data: {{ allAlertsJson|raw }},
-                        backgroundColor: {{ colors|json_encode|raw }},
-                        hoverOffset: 4
-                    }]
-                },
+                data: { labels: {{ allLabelsAlertsJson|raw }},
+                datasets: [{
+                    label: 'Alertes',
+                    data: {{ allAlertsJson|raw }},
+                    backgroundColor: {{ colors|json_encode|raw }},
+                    hoverOffset: 4
+                }]
+            },
                 options: {
                     responsive: false,
-                    plugins: {
-                        legend: {
-							position: 'bottom'
-						}
-                    },
+                    plugins: { legend: { display: false } },
                     cutout: '80%',
 					rotation: -90,
 					circumference: 180,
