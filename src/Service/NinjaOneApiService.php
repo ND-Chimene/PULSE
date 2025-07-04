@@ -78,6 +78,25 @@ class NinjaOneApiService
     }
 
     // Récuperation des tickets
+    // public function getTickets(): array
+    // {
+    //     if (!$this->hasValidTokens()) {
+    //         $this->authenticate();
+    //     }
+
+    //     $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+    //     $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/ticketing/trigger/boards", [
+    //         'headers' => [
+    //             'Authorization' => "Bearer {$this->accessToken}",
+    //             'Content-Type' => 'application/json',
+    //         ],
+    //     ]);
+
+    //     return $response->toArray();
+    // }
+
+    // Récuperation des tickets
     public function getTickets(): array
     {
         if (!$this->hasValidTokens()) {
