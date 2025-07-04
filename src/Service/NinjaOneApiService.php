@@ -78,6 +78,25 @@ class NinjaOneApiService
     }
 
     // Récuperation des tickets
+    // public function getTickets(): array
+    // {
+    //     if (!$this->hasValidTokens()) {
+    //         $this->authenticate();
+    //     }
+
+    //     $this->accessToken = $this->getSession()->get('ninja_access_token');
+
+    //     $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/ticketing/trigger/boards", [
+    //         'headers' => [
+    //             'Authorization' => "Bearer {$this->accessToken}",
+    //             'Content-Type' => 'application/json',
+    //         ],
+    //     ]);
+
+    //     return $response->toArray();
+    // }
+
+    // Récuperation des tickets
     public function getTickets(): array
     {
         if (!$this->hasValidTokens()) {
@@ -86,16 +105,19 @@ class NinjaOneApiService
 
         $this->accessToken = $this->getSession()->get('ninja_access_token');
 
-        $response = $this->httpClient->request('GET', "{$this->ninjaOneApiUrl}/v2/ticketing/trigger/boards", [
+        $response = $this->httpClient->request('POST', "{$this->ninjaOneApiUrl}/v2/ticketing/trigger/board/2/run", [
             'headers' => [
                 'Authorization' => "Bearer {$this->accessToken}",
                 'Content-Type' => 'application/json',
             ],
+            'json' => [
+                'pageSize' => 300,
+                'lastCursorId' => 0
+            ]
         ]);
 
         return $response->toArray();
     }
-
 
     // Récuperation des Patches Échoués
     public function getPatchesFailed(): array
