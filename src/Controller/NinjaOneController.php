@@ -23,10 +23,12 @@ class NinjaOneController extends AbstractController
     // Récupération des tickets selon leur état
     private function getTickets(): array
     {
+        /* TODO :  Récupérer des tickets selon leur état  */
         $tickets = $this->ninjaOneApiService->getTickets()["data"];
 
         $statusTickets = [];
         $ticketCounts = [];
+
 
         foreach ($tickets as $ticket) {
             if (isset($ticket['status']['displayName'])) {
@@ -35,16 +37,15 @@ class NinjaOneController extends AbstractController
         }
 
 
+
         if (!empty($statusTickets)) {
             $counts = array_count_values($statusTickets);
             $statusTickets = array_keys($counts);
             $ticketCounts = array_values($counts);
         }
-        $statusTickets = array_slice($statusTickets, 1, 4);
-        $ticketCounts = array_slice($ticketCounts, 1, 4);
+        $statusTickets = array_slice($statusTickets, 2, 4);
+        $ticketCounts = array_slice($ticketCounts, 2, 4);
         $openTicketCounts = array_sum($ticketCounts);
-
-
 
         return [
             'statusTickets' => $statusTickets,
@@ -112,14 +113,17 @@ class NinjaOneController extends AbstractController
         $alertsCounts = [];
 
         $statusLabels = [
-            "POSTES NON PATCHÉS (30j+)",
-            "ESPACE DISQUE INSUFFISANT",
+            'CONDITION_AGENT_PATCH_LAST_INSTALLED' => 'POSTES NON PATCHÉS (30j+)',
+            'CONDITION_AGENT_DISK_FREE_SPACE' => 'ESPACE DISQUE INSUFFISANT',
         ];
 
         foreach ($alerts as $alert) {
-            if (isset($alert['sourceType'])) {
-                $source = $alert['sourceType'];
-                $statusAlerts[] = $source;
+            if (!isset($alert['sourceType'])) {
+                continue;
+            }
+            $source = $alert['sourceType'];
+            if (isset($statusLabels[$source])) {
+                $statusAlerts[] = $statusLabels[$source];
             }
         }
 
@@ -127,17 +131,11 @@ class NinjaOneController extends AbstractController
             $counts = array_count_values($statusAlerts);
             $statusAlerts = array_keys($counts);
             $alertsCounts = array_values($counts);
-
-            foreach ($statusAlerts as $i => $label) {
-                if (isset($statusLabels[$label])) {
-                    $statusAlerts[$i] = $statusLabels[$label];
-                }
-            }
         }
 
         return [
             'alertsCounts' => $alertsCounts,
-            'statusLabel' => $statusLabels,
+            'statusLabel' => $statusAlerts,
         ];
     }
 
@@ -199,11 +197,13 @@ class NinjaOneController extends AbstractController
             $counts = array_count_values($statusHealth);
             $statusHealth = array_keys($counts);
             $healthCounts = array_values($counts);
+            $allDevices = count($deviceHealths);
         }
 
         return [
             'statusHealth' => $statusHealth,
             'healthCounts' => $healthCounts,
+            'allDevices' => $allDevices,
             'statusHealthJson' => json_encode($statusHealth),
             'healthCountsJson' => json_encode($healthCounts),
         ];
