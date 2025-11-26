@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@hotwired/stimulus':
+        specifier: ^3.2.2
+        version: 3.2.2
       core-js:
         specifier: '3'
         version: 3.42.0
@@ -521,6 +524,9 @@ packages:
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
+
+  '@hotwired/stimulus@3.2.2':
+    resolution: {integrity: sha512-eGeIqNOQpXoPAIP7tC1+1Yc1yl1xnwYqg+3mzqxyrbE5pg5YFBZcA6YoTiByJB6DKAEsiWtl6tjTJS4IYtbB7A==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -2881,6 +2887,8 @@ snapshots:
       '@babel/helper-validator-identifier': 7.27.1
 
   '@discoveryjs/json-ext@0.5.7': {}
+
+  '@hotwired/stimulus@3.2.2': {}
 
   '@isaacs/cliui@8.0.2':
     dependencies:
