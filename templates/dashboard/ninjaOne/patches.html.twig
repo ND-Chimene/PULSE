@@ -9,7 +9,7 @@
 
 		<section class="flex flex-col items-center justify-center w-full h-full gap-y-5">
 			<div class="flex flex-row items-center justify-center gap-2">
-				<span class="text-4xl font-semibold">
+				<span class="text-4xl font-semibold" data-total="patches">
 					{{ allPatches }}
 				</span>
 				<p class="text-lg">
@@ -23,41 +23,50 @@
 
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
-			const patchesChart = document.getElementById('patchesChart').getContext('2d');
+const patchesChart = document.getElementById('patchesChart').getContext('2d');
 
-			const config = {
-				type: 'bar',
-				data: {
-					labels: {{ allPatchesJson|raw }},
-					datasets: [{
-						label: 'Rapport OS/Software',
-						data: {{ allPatchesCountsJson|raw }},
-						borderRadius: {
-							topLeft: 5,
-							topRight: 5,
-							bottomLeft: 0,
-							bottomRight: 0
-						},
-						borderSkipped: 'bottom'
-					}]
-				},
-				options: {
-					responsive: false,
-					plugins: {
-						legend: { display: false }
-					},
-					scales: {
-						x: {
-							grid: {display: false}
-						},
-						y: {
-							grid: {display: false}
-						}
-					},
-				}
-			};
-			new Chart(patchesChart, config);
-			});
+const config = {
+type: 'bar',
+data: {
+labels: {{ allPatchesJson|raw }},
+datasets: [
+{
+label: 'Rapport OS/Software',
+data: {{ allPatchesCountsJson|raw }},
+borderRadius: {
+topLeft: 5,
+topRight: 5,
+bottomLeft: 0,
+bottomRight: 0
+},
+borderSkipped: 'bottom'
+}
+]
+},
+options: {
+responsive: false,
+plugins: {
+legend: {
+display: false
+}
+},
+scales: {
+x: {
+grid: {
+display: false
+}
+},
+y: {
+grid: {
+display: false
+}
+}
+}
+}
+};
+const chart = new Chart(patchesChart, config);
+window.registerChartInstance('patchesChart', chart);
+});
 		</script>
 	</section>
 {% endblock %}

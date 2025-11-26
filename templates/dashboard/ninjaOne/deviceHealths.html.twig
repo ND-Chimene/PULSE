@@ -16,11 +16,11 @@
 
 		<div class="flex flex-col items-center justify-center">
 			<div class="flex flex-col items-center justify-center h-72 w-72 relative">
-				<canvas class="absolute" id="devicesChart"></canvas>
-				<p class="text-4xl font-semibold"> {{allDevices}}</p>
+				<canvas class="absolute" id="healthChart"></canvas>
+				<p class="text-4xl font-semibold">{{allDevices}}</p>
 			</div>
 
-			<table class="w-full mt-10">
+			<table class="w-full mt-10" id="healthTable">
 				<thead class="border-b border-tertiary-white">
 					<tr>
 						<th class="p-2"></th>
@@ -28,7 +28,7 @@
 						<th class="p-2 text-right">Nombre d'appareils</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="healthTableBody">
 					{% for status in statusHealth %}
 						<tr class="text-center">
 							<td class="p-2">
@@ -44,29 +44,35 @@
 
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
-            const devicesChart = document.getElementById('devicesChart').getContext('2d');
-			const colors = {{ statusHealth|map(status => statusColors[status])|json_encode|raw }};
+const devicesChart = document.getElementById('healthChart').getContext('2d');
+const colors = {{ statusHealth|map(status => statusColors[status])|json_encode|raw }};
 
-            const config = {
-                type: 'doughnut',
-                data: {
-                    labels: {{ statusHealthJson|raw }},
-                    datasets: [{
-                        label: 'Santé des appareils',
-                        data: {{ healthCountsJson|raw }},
-                        backgroundColor: colors,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    plugins: {
-                        legend: {display: false}
-                    },
-                    cutout: '70%'
-                }};
-            new Chart(devicesChart, config);
-            });
+const config = {
+type: 'doughnut',
+data: {
+labels: {{ statusHealthJson|raw }},
+datasets: [
+{
+label: 'Santé des appareils',
+data: {{ healthCountsJson|raw }},
+backgroundColor: colors,
+hoverOffset: 4
+}
+]
+},
+options: {
+responsive: false,
+plugins: {
+legend: {
+display: false
+}
+},
+cutout: '70%'
+}
+};
+const chart = new Chart(devicesChart, config);
+window.registerChartInstance('healthChart', chart);
+});
 		</script>
 	</section>
 {% endblock %}
