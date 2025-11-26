@@ -240,4 +240,28 @@ class NinjaOneController extends AbstractController
             'title' => 'NinjaOne',
         ]);
     }
+
+    // Route AJAX pour actualiser les données des graphiques
+    #[IsGranted('ROLE_IT')]
+    #[Route('/api/dashboard/ninjaOne/refresh', name: 'api_dashboard_ninjaOne_refresh', methods: ['GET'])]
+    public function refreshData(): JsonResponse
+    {
+        $ninjaOneData = $this->getAllData();
+
+        return new JsonResponse([
+            'tickets' => $ninjaOneData['tickets'],
+            'patchesFailed' => $ninjaOneData['patchesFailed'],
+            'softwaresRejected' => $ninjaOneData['softwaresRejected'],
+            'operatingSystems' => $ninjaOneData['operatingSystems'],
+            'alerts' => $ninjaOneData['alerts'],
+            'antivirus' => $ninjaOneData['antivirus'],
+            'deviceHealths' => $ninjaOneData['deviceHealths'],
+            'allPatches' => $ninjaOneData['allPatches'],
+            'allAlerts' => $ninjaOneData['allAlerts'],
+            'allPatchesJson' => $ninjaOneData['allPatchesJson'],
+            'allPatchesCountsJson' => $ninjaOneData['allPatchesCountsJson'],
+            'allAlertsJson' => $ninjaOneData['allAlertsJson'],
+            'allLabelsAlertsJson' => $ninjaOneData['allLabelsAlertsJson'],
+        ]);
+    }
 }
