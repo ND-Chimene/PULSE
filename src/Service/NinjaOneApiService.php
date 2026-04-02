@@ -92,7 +92,7 @@ class NinjaOneApiService
                 'Content-Type' => 'application/json',
             ],
             'json' => [
-                'pageSize' => 300,
+                'pageSize' => 10000,
                 'lastCursorId' => 0
             ]
         ]);
