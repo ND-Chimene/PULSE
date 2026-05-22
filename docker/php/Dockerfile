@@ -1,20 +1,27 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
-# Install dependencies
-RUN apk --no-cache add curl git wget bash dpkg acl shadow
+RUN apk --no-cache add curl git wget bash dpkg acl shadow ca-certificates openssl \
+    && update-ca-certificates
 
-# Installer PHP extensions
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN chmod +x /usr/local/bin/install-php-extensions
+RUN chmod +x /usr/local/bin/install-php-extensions \
+    && install-php-extensions opcache iconv soap zip intl fileinfo pdo redis mysqli pdo_sqlite gd
 
-RUN install-php-extensions opcache iconv soap zip intl fileinfo \
-    && install-php-extensions pdo redis mysqli pdo_mysql gd
-
-# Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
-# Créer le répertoire de travail
 WORKDIR /var/www
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+COPY . .
 
-# Préparer Symfony (cache/log) — utile pour éviter les erreurs 500
-RUN mkdir -p var/cache/dev var/log && chown -R www-data:www-data var
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
+RUN mkdir -p var/cache var/log \
+    && chown -R www-data:www-data /var/www \
+    && chmod -R 755 /var/www/vendor \
+    && chmod -R 750 /var/www/var
+
+COPY docker/php/init.sh /usr/local/bin/init.sh
+RUN chmod +x /usr/local/bin/init.sh
+CMD ["/usr/local/bin/init.sh"]

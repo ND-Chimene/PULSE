@@ -1,0 +1,16 @@
+node_modules
+var
+vendor
+.git
+
+local.settings.json
+
+coverage
+dist
+build
+.cache
+
+.env.local
+.env.dev.local
+.env.test.local
+.env.test
