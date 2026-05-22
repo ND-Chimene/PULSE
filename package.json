@@ -1,6 +1,6 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^5.1.0",
+        "@symfony/webpack-encore": "^5.3.1",
         "autoprefixer": "10.4.14",
         "file-loader": "^6.2.0",
         "postcss": "8.4.23",
@@ -15,7 +15,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "core-js": "3",
-        "postcss-loader": "^8.1.1"
+        "core-js": "^3.49.0",
+        "postcss-loader": "^8.2.1"
     }
 }
