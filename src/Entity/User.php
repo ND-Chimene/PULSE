@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -26,7 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = [];
+    private array $roles = ['ROLE_IT'];
 
     /**
      * @var string The hashed password
@@ -52,23 +53,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: History::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $history;
 
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private ?Uuid $publicId;
     public function __construct()
     {
+        $this->created_at = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $this->updated_at = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $this->publicId = Uuid::v7();
         $this->history = new ArrayCollection();
-    }
-
-
-    #[ORM\PrePersist]
-    public function setCreatedAtValue()
-    {
-        $this->created_at = new \DateTimeImmutable();
-        $this->updated_at = new \DateTimeImmutable();
     }
 
     #[ORM\PreUpdate]
     public function setUpdatedAtValue()
     {
-        $this->updated_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
     }
     public function getId(): ?int
     {
@@ -222,6 +220,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $history->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPublicId(): ?Uuid
+    {
+        return $this->publicId;
+    }
+
+    public function setPublicId(Uuid $publicId): static
+    {
+        $this->publicId = $publicId;
 
         return $this;
     }
