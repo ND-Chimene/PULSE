@@ -5,7 +5,6 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     volumes:
-      - .:/var/www
       - sqlite_data:/var/www/var
     environment:
       APP_ENV: ${APP_ENV}
@@ -19,37 +18,14 @@ services:
       dockerfile: docker/nginx/Dockerfile
     ports:
       - "80:80"
-      - "443:443"
-    volumes:
-      - ./public:/var/www/public
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - certbot_certs:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
     depends_on:
       - php
     networks:
       - pulse_network
-
-    certbot:
-      container_name: pulse_certbot
-      image: certbot/certbot
-      volumes:
-        - certbot_certs:/etc/letsencrypt
-        - certbot_www:/var/www/certbot
-      #@TODO : mettre les informations de certbot
-      command: >
-        certbot certonly
-        --webroot
-        --webroot-path=/var/www/certbot
-        --email ton@email.com
-        --agree-tos
-        --no-eff-email
-        -d tondomaine.com
 
 networks:
   pulse_network:
 
 volumes:
   sqlite_data:
-  certbot_certs:
-  certbot_www:
+  

@@ -1,29 +1,39 @@
 #!/bin/sh
 set -e
 
-export APP_ENV=prod
-export APP_DEBUG=0
-
 echo "🚀 Starting app..."
 
+# Create necessary directories
 mkdir -p var/cache var/log var/sessions/prod
 
-echo "🧨 Reset database..."
+# Create SQLite database file if it doesn't exist
+if [ ! -f var/pulse.db ]; then
+  echo "📦 Creating SQLite database file..."
+  touch var/pulse.db
+fi
 
-php bin/console doctrine:database:drop --force --if-exists --env=prod || true
-php bin/console doctrine:database:create --env=prod
+# Set proper permissions on the database file
+chmod 666 var/pulse.db || true
 
-# IMPORTANT : reset complet du schéma Doctrine
-php bin/console doctrine:schema:drop --force --full-database --env=prod || true
-php bin/console doctrine:schema:create --env=prod
+# Generate schema from entities (creates tables)
+echo "🗄️  Creating database schema from entities..."
+php bin/console doctrine:schema:create --env=prod || true
 
+# Run migrations
 echo "🧱 Running migrations..."
 php bin/console doctrine:migrations:migrate --no-interaction --env=prod
 
-echo "🧹 Cache..."
+# Clear and warmup cache
+echo "🧹 Clearing and warming up cache..."
+rm -rf var/cache/*
 php bin/console cache:clear --env=prod --no-debug || true
 php bin/console cache:warmup --env=prod --no-debug || true
 
+# Set proper permissions
+echo "🔒 Setting permissions..."
+chmod -R 775 var || true
 chown -R www-data:www-data var || true
+
+echo "✅ App ready!"
 
 exec php-fpm -F
