@@ -3,23 +3,53 @@
 {% block title %}Nouvelle connexion à votre compte
 {% endblock %}
 
-
 {% block email_content %}
-	<h1>Bonjour ,</h1>
 
-	<p>Nous avons détecté une nouvelle connexion sur PULSE.</p>
-	<p>Détails de la connexion :</p>
-	<ul>
-		<li>Date et heure :
-			{{ date|date('d/m/Y H:i:s') }}</li>
-		<li>Adresse IP :
-			{{ ip_address }}</li>
-		<li>Appareil :
-			{{ device }}</li>
-		<li>Système d'exploitation :
-			{{ os }}</li>
-		<li>Navigateur :
-			{{ browser }}</li>
-	</ul>
+	<p style="margin:0 0 24px;font-size:16px;color:#111827;">
+		Bonjour
+		<strong>{{ user.firstname }}
+			{{ user.lastname }}</strong>,
+	</p>
+
+	<p style="margin:0 0 24px;font-size:15px;color:#374151;line-height:1.6;">
+		Une nouvelle connexion a été détectée sur votre compte
+		<strong>PULSE</strong>. Si vous êtes à l'origine de cette connexion, vous pouvez ignorer ce message.
+	</p>
+
+	<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:24px;">
+		<tr>
+			<td style="padding:24px;">
+				<p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">
+					Détails de la connexion
+				</p>
+				<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:16px;">
+					<tr>
+						<td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:13px;color:#6b7280;width:160px;">Date et heure</td>
+						<td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;font-weight:600;">{{ date|date('d/m/Y H:i:s') }}</td>
+					</tr>
+					<tr>
+						<td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:13px;color:#6b7280;">Adresse IP</td>
+						<td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;font-weight:600;">{{ ip_address }}</td>
+					</tr>
+					<tr>
+						<td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:13px;color:#6b7280;">Appareil</td>
+						<td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;font-weight:600;">{{ device ?: 'Inconnu' }}</td>
+					</tr>
+					<tr>
+						<td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:13px;color:#6b7280;">Système</td>
+						<td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;font-weight:600;">{{ os ?: 'Inconnu' }}</td>
+					</tr>
+					<tr>
+						<td style="padding:8px 0;font-size:13px;color:#6b7280;">Navigateur</td>
+						<td style="padding:8px 0;font-size:13px;color:#111827;font-weight:600;">{{ browser ?: 'Inconnu' }}</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+	<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+		Si vous n'êtes pas à l'origine de cette connexion, contactez immédiatement votre administrateur.
+	</p>
 
 {% endblock %}

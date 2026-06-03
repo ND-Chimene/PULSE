@@ -1,12 +1,42 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}{% endblock %}
-		</title>
-	</head>
-	<body>
-		{% block email_content %}{% endblock %}
-	</body>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f4f5;padding:40px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+                    {{-- Header --}}
+                    <tr>
+                        <td style="background-color:#0f0f0f;padding:28px 40px;text-align:left;">
+                            <span style="color:#ffffff;font-size:22px;font-weight:700;letter-spacing:2px;">PULSE</span>
+                        </td>
+                    </tr>
+
+                    {{-- Content --}}
+                    <tr>
+                        <td style="padding:40px 40px 32px;">
+                            {% block email_content %}{% endblock %}
+                        </td>
+                    </tr>
+
+                    {{-- Footer --}}
+                    <tr>
+                        <td style="background-color:#f4f4f5;padding:20px 40px;border-top:1px solid #e5e7eb;">
+                            <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">
+                                Cet e-mail a été envoyé automatiquement par PULSE. Ne pas répondre à ce message.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
 </html>

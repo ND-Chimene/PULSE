@@ -20,6 +20,10 @@
 			<a href="{{ path('app_history_log') }}" class='w-9 h-auto aspect-square {{ title == ' ' ? "scale-125" : "scale-100" }} '>
 				<img src="{{ asset('build/icons/lists.svg') }}" class="w-full h-full object-contain" alt="Icon Lists">
 			</a>
+			<a href="{{ path('app_admin_users') }}" class='w-9 h-auto aspect-square {{ title == "Administration" ? "scale-125" : "scale-100" }} '>
+				<img src="{{ asset('build/icons/users.svg') }}" class="w-full h-full object-contain" alt="Icon Utilisateurs">
+			</a>
+
 		{% endif %}
 
 		<a href="{{ path('app_profile') }}" class='w-9 h-auto aspect-square {{ title == ' utilisateur' ? "scale-125" : "scale-100" }} '>
