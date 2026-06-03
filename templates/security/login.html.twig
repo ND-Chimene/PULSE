@@ -4,40 +4,50 @@
 {% endblock %}
 
 {% block login_content %}
-	<main class="w-screen h-screen bg-black-to-red text-primary-white">
-		<section class="flex flex-col items-center justify-center h-full z-20 relative">
-			<h1 class="text-center text-6xl mb-10">Connexion &agrave; PULSE</h1>
+	<main class="w-screen h-screen flex items-center justify-center relative bg-black-to-red text-primary-white p-12">
 
-			<span class="flex flex-col items-center justify-center bg-primary-white rounded-3xl h-20 aspect-[1/1] p-4 drop-shadow-md">
-				<img src="{{ asset('build/images/icon.webp') }}" alt="Icon Computis" class="w-full h-full object-contain" loading="lazy">
-			</span>
+		<section class="w-full max-w-md flex flex-col items-center justify-center px-4">
+			<h1 class="text-7xl">PULSE</h1>
 
-			<form method="post" class="flex flex-col items-center justify-center gap-10 mt-10 w-96 text-lg">
-				<div class="w-full flex flex-col gap-2">
-					<label for="inputEmail">Email</label>
-					<input class="text-primary-black rounded-lg px-5 py-2" type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-				</div>
-
-				<div class="w-full flex flex-col gap-2">
-					<label for="inputPassword">Mot de passe</label>
-					<input class="text-primary-black rounded-lg px-5 py-2" type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-				</div>
-				<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-				<button class="w-full text-primary-white bg-primary-black rounded-lg px-5 py-2 flex items-center justify-center gap-2 hover:bg-secondary-black transition-all duration-300" type="submit">
-					Se connecter
-					<span class="w-5 h-auto">
-						<img src="{{ asset('build/icons/login.svg') }}" alt="Icon Login" class="w-full h-full" loading="lazy">
-					</span>
-				</button>
+			<div class="w-full p-10 flex flex-col gap-6 bg-white/10 border border-white/30 rounded-xl mt-10">
 
 				{% if error %}
-					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+					<div class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
+						{{ error.messageKey|trans(error.messageData, 'security') }}
+					</div>
 				{% endif %}
-			</form>
 
-			<h2 class="text-center text-3xl mt-10 italic">PULSE ça pulse !</h2>
+				<form method="post" class="flex flex-col items-center justify-center gap-10">
+
+					<div class="w-full flex flex-col gap-2">
+						<label for="inputEmail">Email</label>
+						<input class="text-primary-black rounded-lg px-5 py-2" type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" placeholder="exemple@exemple.fr" required autofocus>
+					</div>
+
+					<div class="w-full flex flex-col gap-2">
+						<label for="inputPassword">Mot de passe</label>
+						<input class="text-primary-black rounded-lg px-5 py-2" type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" placeholder="••••••••" required>
+					</div>
+
+					<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+					<button class="w-full text-primary-white bg-primary-black rounded-lg px-5 py-2 flex items-center justify-center gap-2 hover:bg-secondary-black transition-all duration-300" type="submit">
+						Se connecter
+						<span class="w-5 h-auto">
+							<img src="{{ asset('build/icons/login.svg') }}" alt="Icon Login" class="w-full h-full" loading="lazy">
+						</span>
+					</button>
+
+				</form>
+
+			</div>
+			<p class="text-center text-2xl m-10 italic">PULSE ça pulse !</p>
+
 		</section>
-	</main>
 
+		<span class="flex flex-col items-center justify-center bg-white rounded-2xl h-16 aspect-square p-2 absolute right-24 bottom-12">
+			<img src="{{ asset('build/images/icon.webp') }}" alt="Icon Computis" class="w-full h-full object-contain" loading="lazy">
+		</span>
+
+	</main>
 {% endblock %}
