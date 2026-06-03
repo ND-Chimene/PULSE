@@ -10,6 +10,7 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 
 COPY webpack.config.js postcss.config.js tailwind.config.js ./
 COPY assets ./assets
+COPY templates ./templates
 
 RUN pnpm run build
 

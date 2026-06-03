@@ -10,6 +10,7 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 
 COPY webpack.config.js postcss.config.js tailwind.config.js ./
 COPY assets ./assets
+COPY templates ./templates
 
 RUN pnpm run build
 
@@ -22,6 +23,8 @@ WORKDIR /var/www/public
 
 COPY public /var/www/public
 COPY --from=assets /app/public/build /var/www/public/build
+
+RUN chmod -R 755 /var/www/public
 
 EXPOSE 80
 EXPOSE 443
