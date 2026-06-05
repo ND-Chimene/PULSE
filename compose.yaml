@@ -4,8 +4,6 @@ services:
     environment:
       APP_ENV: prod
       APP_DEBUG: "0"
-    volumes:
-      - sqlite_data:/var/www/var
 
   nginx:
     image: computisazcr.azurecr.io/pulse-nginx:latest
@@ -13,6 +11,3 @@ services:
       - "80:80"
     depends_on:
       - php
-
-volumes:
-  sqlite_data:
