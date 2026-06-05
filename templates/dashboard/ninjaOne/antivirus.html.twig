@@ -7,11 +7,11 @@
 			<h3 class="text-2xl">Antivirus</h3>
 		</section>
 
-		<section class="w-full h-32">
-			<div class="h-64 overflow-y-scroll">
+		<section class="overflow-y-scroll w-full h-42">
+			<div class="w-full h-36">
 				{% if statusAntivirus is defined and statusAntivirus|length > 0 %}
 					{% for i in 0..(statusAntivirus|length - 1) %}
-						<div class="p-2 bg-secondary-red rounded-lg text-primary-white mb-5">
+						<div class="p-2 bg-secondary-red rounded-lg text-primary-white mb-5 ">
 							<p>
 								{{ statusAntivirus[i] }}
 							</p>

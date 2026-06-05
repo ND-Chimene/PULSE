@@ -1,0 +1,33 @@
+{% extends 'base_error.html.twig' %}
+
+{% block title %}403 - Accès refusé - PULSE{% endblock %}
+
+{% block error_content %}
+    <main class="w-screen h-screen flex items-center justify-center relative bg-black-to-red text-primary-white">
+
+        <section class="w-full max-w-md flex flex-col items-center justify-center px-4 text-center">
+            <h1 class="text-7xl font-light tracking-widest mb-10">PULSE</h1>
+
+            <div class="w-full p-10 flex flex-col items-center gap-6 bg-white/10 border border-white/20 rounded-xl">
+                <p class="text-8xl font-semibold">403</p>
+
+                <div class="flex flex-col gap-2">
+                    <h2 class="text-2xl font-medium">Accès refusé</h2>
+                    <p class="text-sm text-primary-white/60">Vous n'avez pas les droits nécessaires pour accéder à cette page.</p>
+                </div>
+
+                <hr class="w-full border-white/20">
+
+                <a href="{{ path('app_dashboard_ninjaOne') }}"
+                   class="w-full text-center bg-primary-black hover:bg-secondary-black transition-all duration-300 text-primary-white px-6 py-3 rounded-lg text-sm font-medium">
+                    Retour à l'accueil
+                </a>
+            </div>
+        </section>
+
+        <span class="flex items-center justify-center bg-primary-white rounded-2xl h-16 aspect-square p-2 drop-shadow-lg absolute right-12 bottom-12">
+            <img src="{{ asset('build/images/icon.webp') }}" alt="Icon Computis" class="w-full h-full object-contain" loading="lazy">
+        </span>
+
+    </main>
+{% endblock %}

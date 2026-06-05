@@ -16,3 +16,4 @@ import './icons/login.svg';
 
 // JS
 import './js/updateClock.js';
+import './js/dashboardRefresh.js';

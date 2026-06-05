@@ -6,8 +6,8 @@
 {% block page_content %}
 	<section class="flex flex-col items-center justify-between p-10 h-full">
 		<div class=" w-full ">
-			<h2 class="text-4xl font-bold mb-4">Paramètres</h2>
-			<p class="mb-8">Vous pouvez modifier vos informations de compte ici.</p>
+			<h2 class="text-4xl font-bold mb-2">Paramètres</h2>
+			<p class="text-sm text-gray-500">Entrez votre mot de passe actuel pour valider toute modification.</p>
 		</div>
 
 		{% for label, messages in app.flashes %}
@@ -21,29 +21,28 @@
 		<section class="flex flex-col items-center justify-between w-full h-auto bg-secondary-white rounded-lg p-10">
 			{{ form_start(form, {'attr': {'class': 'flex flex-col items-center gap-y-20 w-full'}}) }}
 
-			<section class="flex flex-row items-center justify-between w-full ">
-				<div class="flex flex-col">
-					{{ form_label(form.firstname) }}
-					{{ form_widget(form.firstname) }}
+			<section class="grid grid-cols-2 gap-8 w-full">
+				<div class="flex flex-col gap-2">
+					{{ form_label(form.firstname, null, {'label_attr': {'class': 'text-sm font-medium'}}) }}
+					{{ form_widget(form.firstname, {'attr': {'class': 'w-full text-primary-black rounded-lg px-5 py-2 border border-gray-200'}}) }}
 				</div>
 
-				<div class="flex flex-col">
-					{{ form_label(form.lastname) }}
-					{{ form_widget(form.lastname) }}
+				<div class="flex flex-col gap-2">
+					{{ form_label(form.lastname, null, {'label_attr': {'class': 'text-sm font-medium'}}) }}
+					{{ form_widget(form.lastname, {'attr': {'class': 'w-full text-primary-black rounded-lg px-5 py-2 border border-gray-200'}}) }}
+				</div>
+
+				<div class="flex flex-col gap-2">
+					{{ form_label(form.email, null, {'label_attr': {'class': 'text-sm font-medium'}}) }}
+					{{ form_widget(form.email, {'attr': {'class': 'w-full text-primary-black rounded-lg px-5 py-2 border border-gray-200'}}) }}
+				</div>
+
+				<div class="flex flex-col gap-2">
+					{{ form_label(form.password, null, {'label_attr': {'class': 'text-sm font-medium'}}) }}
+					{{ form_widget(form.password, {'attr': {'class': 'w-full text-primary-black rounded-lg px-5 py-2 border border-gray-200'}}) }}
 				</div>
 			</section>
 
-			<section class="flex flex-row items-center justify-between w-full">
-				<div class="flex flex-col">
-					{{ form_label(form.email) }}
-					{{ form_widget(form.email) }}
-				</div>
-
-				<div class="flex flex-col ">
-					{{ form_label(form.password) }}
-					{{ form_widget(form.password) }}
-				</div>
-			</section>
 
 			{{ form_widget(form.submit) }}
 			{{ form_end(form) }}

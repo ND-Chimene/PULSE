@@ -23,20 +23,29 @@ class NinjaOneController extends AbstractController
     // Récupération des tickets selon leur état
     private function getTickets(): array
     {
-        $tickets = $this->ninjaOneApiService->getTickets();
+        /* TODO :  Récupérer des tickets selon leur état  */
+        $tickets = $this->ninjaOneApiService->getTickets()["data"];
 
         $statusTickets = [];
         $ticketCounts = [];
-        $titleStatusTickets = ['Tickets non attribués', 'Tickets ouverts', 'Tickets Non Résolus'];
+
 
         foreach ($tickets as $ticket) {
-            if (isset($ticket['name']) && in_array($ticket['name'], $titleStatusTickets)) {
-                $statusTickets[] = $ticket['name'];
-                $ticketCounts[] = (int)($ticket['ticketCount'] ?? 0);
+            if (isset($ticket['status']['displayName'])) {
+                $statusTickets[] = $ticket['status']['displayName'];
             }
         }
 
-        $openTicketCounts = array_sum(array_slice($ticketCounts, 1, 3));
+
+
+        if (!empty($statusTickets)) {
+            $counts = array_count_values($statusTickets);
+            $statusTickets = array_keys($counts);
+            $ticketCounts = array_values($counts);
+        }
+        $statusTickets = array_slice($statusTickets, 2, 4);
+        $ticketCounts = array_slice($ticketCounts, 2, 4);
+        $openTicketCounts = array_sum($ticketCounts);
 
         return [
             'statusTickets' => $statusTickets,
@@ -104,14 +113,17 @@ class NinjaOneController extends AbstractController
         $alertsCounts = [];
 
         $statusLabels = [
-            "POSTES NON PATCHÉS (30j+)",
-            "ESPACE DISQUE INSUFFISANT",
+            'CONDITION_AGENT_PATCH_LAST_INSTALLED' => 'POSTES NON PATCHÉS (30j+)',
+            'CONDITION_AGENT_DISK_FREE_SPACE' => 'ESPACE DISQUE INSUFFISANT',
         ];
 
         foreach ($alerts as $alert) {
-            if (isset($alert['sourceType'])) {
-                $source = $alert['sourceType'];
-                $statusAlerts[] = $source;
+            if (!isset($alert['sourceType'])) {
+                continue;
+            }
+            $source = $alert['sourceType'];
+            if (isset($statusLabels[$source])) {
+                $statusAlerts[] = $statusLabels[$source];
             }
         }
 
@@ -119,17 +131,11 @@ class NinjaOneController extends AbstractController
             $counts = array_count_values($statusAlerts);
             $statusAlerts = array_keys($counts);
             $alertsCounts = array_values($counts);
-
-            foreach ($statusAlerts as $i => $label) {
-                if (isset($statusLabels[$label])) {
-                    $statusAlerts[$i] = $statusLabels[$label];
-                }
-            }
         }
 
         return [
             'alertsCounts' => $alertsCounts,
-            'statusLabel' => $statusLabels,
+            'statusLabel' => $statusAlerts,
         ];
     }
 
@@ -191,11 +197,13 @@ class NinjaOneController extends AbstractController
             $counts = array_count_values($statusHealth);
             $statusHealth = array_keys($counts);
             $healthCounts = array_values($counts);
+            $allDevices = count($deviceHealths);
         }
 
         return [
             'statusHealth' => $statusHealth,
             'healthCounts' => $healthCounts,
+            'allDevices' => $allDevices,
             'statusHealthJson' => json_encode($statusHealth),
             'healthCountsJson' => json_encode($healthCounts),
         ];
@@ -230,6 +238,30 @@ class NinjaOneController extends AbstractController
         return $this->render('dashboard/ninjaOne/index.html.twig', [
             'ninjaOneData' => $ninjaOneData,
             'title' => 'NinjaOne',
+        ]);
+    }
+
+    // Route AJAX pour actualiser les données des graphiques
+    #[IsGranted('ROLE_IT')]
+    #[Route('/api/dashboard/ninjaOne/refresh', name: 'api_dashboard_ninjaOne_refresh', methods: ['GET'])]
+    public function refreshData(): JsonResponse
+    {
+        $ninjaOneData = $this->getAllData();
+
+        return new JsonResponse([
+            'tickets' => $ninjaOneData['tickets'],
+            'patchesFailed' => $ninjaOneData['patchesFailed'],
+            'softwaresRejected' => $ninjaOneData['softwaresRejected'],
+            'operatingSystems' => $ninjaOneData['operatingSystems'],
+            'alerts' => $ninjaOneData['alerts'],
+            'antivirus' => $ninjaOneData['antivirus'],
+            'deviceHealths' => $ninjaOneData['deviceHealths'],
+            'allPatches' => $ninjaOneData['allPatches'],
+            'allAlerts' => $ninjaOneData['allAlerts'],
+            'allPatchesJson' => $ninjaOneData['allPatchesJson'],
+            'allPatchesCountsJson' => $ninjaOneData['allPatchesCountsJson'],
+            'allAlertsJson' => $ninjaOneData['allAlertsJson'],
+            'allLabelsAlertsJson' => $ninjaOneData['allLabelsAlertsJson'],
         ]);
     }
 }
